@@ -6,7 +6,9 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 
@@ -16,11 +18,15 @@ public class VectorDoubleWritable implements Writable {
 	public VectorDoubleWritable() {
 		vec.clear();
 	}
-	
-	public VectorDoubleWritable(Text t){
-		
+
+	public VectorDoubleWritable(Text value) {
+		vec.clear();
+		StringTokenizer itr = new StringTokenizer(value.toString());
+		while (itr.hasMoreTokens()) {
+			vec.add(Double.parseDouble(itr.nextToken()));
+		}
 	}
-	
+
 	public ArrayList<Double> get() {
 		return vec;
 	}
