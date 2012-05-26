@@ -19,7 +19,6 @@ public class KmeansReducer extends
 		Reducer<IntWritable, Cluster, IntWritable, Cluster> {
 	protected Clusterer clusterer;
 	protected double threshold;
-
 	Map<IntWritable, Cluster> clusterMap = new HashMap<IntWritable, Cluster>();
 
 	@Override
@@ -33,6 +32,8 @@ public class KmeansReducer extends
 		if (clusterer.isConverged(cluster, threshold))
 			context.getCounter("Clusterer", "Converged Cluster").increment(1);
 		try {
+            // increase counter
+            context.getCounter(UpdateCounter.UPDATED).increment(1);
 			context.write(key, cluster);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
