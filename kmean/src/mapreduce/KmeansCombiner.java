@@ -13,10 +13,16 @@ public class KmeansCombiner
 		Reducer<IntWritable, Iterable<VectorDoubleWritable>, IntWritable, Cluster> {
 
 	public void reduce(IntWritable key, Iterable<VectorDoubleWritable> values,
-			Context contex) throws IOException {
+			Context context) throws IOException {
 		Cluster cluster = new Cluster();
 		for (VectorDoubleWritable point : values) {
 			cluster.addPoint(point);
+		}
+		try {
+			context.write(key, cluster);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

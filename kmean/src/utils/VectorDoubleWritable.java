@@ -48,17 +48,27 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		return sum;
 	}
 
+	public VectorDoubleWritable plus(VectorDoubleWritable t2) {
+		ListIterator<Double> ite1 = vec.listIterator();
+		ListIterator<Double> ite2 = t2.get().listIterator();
+		VectorDoubleWritable result = new VectorDoubleWritable();
+		while (ite1.hasNext() && ite2.hasNext()) {
+			result.append(ite1.next() + ite2.next());
+		}
+		return result;
+	}
+
 	public VectorDoubleWritable times(VectorDoubleWritable t2) {
 		ListIterator<Double> ite1 = vec.listIterator();
 		ListIterator<Double> ite2 = t2.get().listIterator();
 		VectorDoubleWritable result = new VectorDoubleWritable();
 		while (ite1.hasNext() && ite2.hasNext()) {
-			result.add(ite1.next() * ite2.next());
+			result.append(ite1.next() * ite2.next());
 		}
 		return result;
 	}
 
-	public void add(Double data) {
+	public void append(Double data) {
 		vec.add(data);
 	}
 
