@@ -1,32 +1,33 @@
 package mapreduce;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.WritableComparable;
-import org.apache.hadoop.mapred.MapReduceBase;
-import org.apache.hadoop.mapred.OutputCollector;
-import org.apache.hadoop.mapred.Reducer;
-import org.apache.hadoop.mapred.Reporter;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.mapreduce.Reducer;
 
-public class KmeansReducer extends MapReduceBase implements
-		Reducer<WritableComparable<?>, Iterator, OutputCollector, Reporter> {
+import clusterer.Cluster;
 
-	public void reduce(WritableComparable _key, Iterator values,
-			OutputCollector output, Reporter reporter) throws IOException {
-		// replace KeyType with the real type of your key
-		Text key = (Text) _key;
+public class KmeansReducer extends
+		Reducer<IntWritable, Cluster, IntWritable, Cluster> {
 
-		while (values.hasNext()) {
-			// replace ValueType with the real type of your value
-			Integer value = (Integer) values.next();
+	Map<IntWritable, Cluster> clusterMap = new HashMap<IntWritable, Cluster>();
 
-			// process value
+	public void reduce(IntWritable key, Iterable<Cluster> values,
+			Context context) throws IOException {
+		Cluster cluster = clusterMap.get(key);
+		for (Cluster value : values) {
+			cluster.omitCluster(value);
+		}
+		try {
+			context.write(key, cluster);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
         // TODO:
         // The reducer should output the (partial) result anyway...
 	}
-
 }
