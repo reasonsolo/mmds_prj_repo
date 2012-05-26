@@ -50,6 +50,14 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		return sum;
 	}
 
+	public double sumSquare() {
+		double sum = 0;
+		for (Double data : vec) {
+			sum += data * data;
+		}
+		return sum;
+	}
+
 	public VectorDoubleWritable plus(VectorDoubleWritable t2) {
 		ListIterator<Double> ite1 = vec.listIterator();
 		ListIterator<Double> ite2 = t2.get().listIterator();

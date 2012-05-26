@@ -8,9 +8,13 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import clusterer.Cluster;
+import clusterer.Clusterer;
+import distanceMeasure.DistanceMeasure;
 
 public class KmeansReducer extends
 		Reducer<IntWritable, Cluster, IntWritable, Cluster> {
+	protected Clusterer clusterer;
+	protected final double threshold = 1.0;
 
 	Map<IntWritable, Cluster> clusterMap = new HashMap<IntWritable, Cluster>();
 
@@ -20,6 +24,9 @@ public class KmeansReducer extends
 		for (Cluster value : values) {
 			cluster.omitCluster(value);
 		}
+
+		if (clusterer.isConverged(cluster, threshold))
+			context.getCounter("Clusterer", "Converged Cluster").increment(1);
 		try {
 			context.write(key, cluster);
 		} catch (InterruptedException e) {
@@ -27,7 +34,7 @@ public class KmeansReducer extends
 			e.printStackTrace();
 		}
 
-        // TODO:
-        // The reducer should output the (partial) result anyway...
+		// TODO:
+		// The reducer should output the (partial) result anyway...
 	}
 }

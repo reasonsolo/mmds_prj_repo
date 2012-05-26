@@ -1,14 +1,25 @@
 package clusterer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import utils.VectorDoubleWritable;
+import distanceMeasure.DistanceMeasure;
+import distanceMeasure.EuclideanDistance;
 
 public class Clusterer {
 	protected ArrayList<Cluster> clusters = new ArrayList<Cluster>();
+	protected HashMap<Integer, Cluster> clusterMap = new HashMap<Integer, Cluster>();
+	protected DistanceMeasure dm;
 
 	public Clusterer() {
 		clusters.clear();
+		this.dm = new EuclideanDistance();
+	}
+
+	public Clusterer(DistanceMeasure dm) {
+		clusters.clear();
+		this.dm = dm;
 	}
 
 	public void loadClusters() {
@@ -28,6 +39,11 @@ public class Clusterer {
 			}
 		}
 		return nearest;
+	}
+
+	public boolean isConverged(Cluster cluster, double threshold) {
+		Cluster last = clusterMap.get(cluster.getId());
+		return dm.distance(cluster.getCentroid(), last.getCentroid()) < threshold;
 	}
 
 	public ArrayList<Cluster> getClusters() {
