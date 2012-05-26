@@ -77,6 +77,9 @@ public class Clusterer {
 	}
 
 	public void setClusters(ArrayList<Cluster> clusters) {
-		this.clusters = clusters;
+		this.clusters.clear();
+		for (Cluster data : clusters) {
+			this.clusters.add(data);
+		}
 	}
 }
