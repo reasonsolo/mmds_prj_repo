@@ -14,6 +14,18 @@ public class KmeansMapper extends
 		Mapper<IntWritable, Text, IntWritable, VectorDoubleWritable> {
 	private VectorDoubleWritable point = null;
 	protected Clusterer clusterer = new Clusterer();
+    
+    private void loadPart() {
+        // TODO 
+        // a helper method, loads a single kmeans center part file
+    }
+
+    public void configure(JobConf conf) {
+        // TODO:
+        // This method should load all canopy centers and k-mean centers
+        // into memory, and get the mapper ready for iteration
+    }
+
 
 	public void map(IntWritable key, Text values, Context context)
 			throws IOException {

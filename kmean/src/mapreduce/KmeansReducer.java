@@ -24,6 +24,9 @@ public class KmeansReducer extends MapReduceBase implements
 
 			// process value
 		}
+
+        // TODO:
+        // The reducer should output the (partial) result anyway...
 	}
 
 }
