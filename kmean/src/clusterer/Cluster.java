@@ -10,8 +10,8 @@ import org.apache.hadoop.io.Writable;
 import utils.VectorDoubleWritable;
 
 public class Cluster implements Writable {
-	protected int id;
-	protected int size;
+	protected Integer id;
+	protected Integer size;
 	protected VectorDoubleWritable s1;
 	protected VectorDoubleWritable s2;
 
@@ -53,9 +53,9 @@ public class Cluster implements Writable {
 		size++;
 	}
 
-	public double distance(VectorDoubleWritable point)
+	public double euclideanDistance(VectorDoubleWritable point)
 			throws IllegalStateException {
-		return point.euclidianDistance(this.getCentroid());
+		return point.euclideanDistance(this.getCentroid());
 	}
 
 	public void omitCluster(Cluster omitee) {
@@ -80,11 +80,11 @@ public class Cluster implements Writable {
 		s2.write(out);
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -104,11 +104,11 @@ public class Cluster implements Writable {
 		this.s2 = s2;
 	}
 
-	public int getSize() {
+	public Integer getSize() {
 		return size;
 	}
 
-	public void setSize(int size) {
+	public void setSize(Integer size) {
 		this.size = size;
 	}
 
@@ -121,5 +121,14 @@ public class Cluster implements Writable {
 			ite.set(data / size);
 		}
 		return centroid;
+	}
+
+	public double variance() {
+		double s1avg = s1.sum() / size;
+		return s2.sum() / size - s1avg * s1avg;
+	}
+
+	public double standardDiviation() {
+		return Math.sqrt(variance());
 	}
 }

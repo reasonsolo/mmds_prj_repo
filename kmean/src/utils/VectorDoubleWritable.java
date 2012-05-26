@@ -50,12 +50,30 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		return sum;
 	}
 
+	public double sumSquare() {
+		double sum = 0;
+		for (Double data : vec) {
+			sum += data * data;
+		}
+		return sum;
+	}
+
 	public VectorDoubleWritable plus(VectorDoubleWritable t2) {
 		ListIterator<Double> ite1 = vec.listIterator();
 		ListIterator<Double> ite2 = t2.get().listIterator();
 		VectorDoubleWritable result = new VectorDoubleWritable();
 		while (ite1.hasNext() && ite2.hasNext()) {
 			result.append(ite1.next() + ite2.next());
+		}
+		return result;
+	}
+
+	public VectorDoubleWritable minus(VectorDoubleWritable t2) {
+		ListIterator<Double> ite1 = vec.listIterator();
+		ListIterator<Double> ite2 = t2.get().listIterator();
+		VectorDoubleWritable result = new VectorDoubleWritable();
+		while (ite1.hasNext() && ite2.hasNext()) {
+			result.append(ite1.next() - ite2.next());
 		}
 		return result;
 	}
@@ -70,6 +88,52 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		return result;
 	}
 
+	public VectorDoubleWritable divides(VectorDoubleWritable t2) {
+		ListIterator<Double> ite1 = vec.listIterator();
+		ListIterator<Double> ite2 = t2.get().listIterator();
+		VectorDoubleWritable result = new VectorDoubleWritable();
+		while (ite1.hasNext() && ite2.hasNext()) {
+			result.append(ite1.next() / ite2.next());
+		}
+		return result;
+	}
+
+	public VectorDoubleWritable plus(double t2) {
+		ListIterator<Double> ite1 = vec.listIterator();
+		VectorDoubleWritable result = new VectorDoubleWritable();
+		while (ite1.hasNext()) {
+			result.append(ite1.next() + t2);
+		}
+		return result;
+	}
+
+	public VectorDoubleWritable minus(double t2) {
+		ListIterator<Double> ite1 = vec.listIterator();
+		VectorDoubleWritable result = new VectorDoubleWritable();
+		while (ite1.hasNext()) {
+			result.append(ite1.next() - t2);
+		}
+		return result;
+	}
+
+	public VectorDoubleWritable times(double t2) {
+		ListIterator<Double> ite1 = vec.listIterator();
+		VectorDoubleWritable result = new VectorDoubleWritable();
+		while (ite1.hasNext()) {
+			result.append(ite1.next() * t2);
+		}
+		return result;
+	}
+
+	public VectorDoubleWritable divides(double t2) {
+		ListIterator<Double> ite1 = vec.listIterator();
+		VectorDoubleWritable result = new VectorDoubleWritable();
+		while (ite1.hasNext()) {
+			result.append(ite1.next() / t2);
+		}
+		return result;
+	}
+
 	public void append(Double data) {
 		vec.add(data);
 	}
@@ -78,7 +142,7 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		vec.remove(data);
 	}
 
-	public double euclidianDistance(VectorDoubleWritable d)
+	public double euclideanDistance(VectorDoubleWritable d)
 			throws IllegalStateException {
 		if (d.get().size() != vec.size())
 			throw new IllegalStateException("Dimension mismatch!");
