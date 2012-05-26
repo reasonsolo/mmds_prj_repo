@@ -12,11 +12,16 @@ import java.util.StringTokenizer;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 
-public class VectorDoubleWritable implements Writable {
+public class VectorDoubleWritable implements Writable, Cloneable {
 	protected ArrayList<Double> vec = new ArrayList<Double>();
 
 	public VectorDoubleWritable() {
 		vec.clear();
+	}
+
+	@SuppressWarnings("unchecked")
+	public VectorDoubleWritable(ArrayList<Double> array) {
+		vec = (ArrayList<Double>) array.clone();
 	}
 
 	public VectorDoubleWritable(Text value) {
@@ -107,6 +112,12 @@ public class VectorDoubleWritable implements Writable {
 				return false;
 		}
 		return true;
+	}
+
+	@Override
+	public Object clone() {
+		VectorDoubleWritable clone = new VectorDoubleWritable(this.vec);
+		return clone;
 	}
 
 	@Override
