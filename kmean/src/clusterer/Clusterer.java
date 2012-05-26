@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import utils.VectorDoubleWritable;
 
 public class Clusterer {
-	private ArrayList<Cluster> clusters = new ArrayList<Cluster>();
+	protected ArrayList<Cluster> clusters = new ArrayList<Cluster>();
 
 	public Clusterer() {
 		clusters.clear();
 	}
 
 	public void loadClusters() {
-
+		// TODO read clusters data from last iteration.
 	}
 
 	public Cluster findNearestCluster(VectorDoubleWritable point)
@@ -28,5 +28,13 @@ public class Clusterer {
 			}
 		}
 		return nearest;
+	}
+
+	public ArrayList<Cluster> getClusters() {
+		return this.clusters;
+	}
+
+	public void setClusters(ArrayList<Cluster> clusters) {
+		this.clusters = clusters;
 	}
 }
