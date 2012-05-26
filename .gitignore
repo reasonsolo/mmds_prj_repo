@@ -1,1 +1,2 @@
-./kmean/bin/
+./kmean/bin/ 
+*.class

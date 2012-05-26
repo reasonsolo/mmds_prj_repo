@@ -19,9 +19,11 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		vec.clear();
 	}
 
-	@SuppressWarnings("unchecked")
 	public VectorDoubleWritable(ArrayList<Double> array) {
-		vec = (ArrayList<Double>) array.clone();
+		vec.clear();
+		for (Double data : array) {
+			vec.add(data);
+		}
 	}
 
 	public VectorDoubleWritable(Text value) {
@@ -79,7 +81,7 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 	public double euclidianDistance(VectorDoubleWritable d)
 			throws IllegalStateException {
 		if (d.get().size() != vec.size())
-			throw new IllegalStateException("Dimension doesn't agree!");
+			throw new IllegalStateException("Dimension mismatch!");
 		Iterator<Double> ite1 = vec.iterator();
 		Iterator<Double> ite2 = d.get().iterator();
 		double dist = 0;
