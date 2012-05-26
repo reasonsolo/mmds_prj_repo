@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 ./kmean/bin/
+=======
+./kmean/bin/ 
+>>>>>>> bd98474a42f869219673bba662de8010e566ebee
 *.class
