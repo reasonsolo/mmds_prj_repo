@@ -9,7 +9,6 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import clusterer.Cluster;
 import clusterer.Clusterer;
-import distanceMeasure.DistanceMeasure;
 
 public class KmeansReducer extends
 		Reducer<IntWritable, Cluster, IntWritable, Cluster> {

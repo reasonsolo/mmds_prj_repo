@@ -12,7 +12,7 @@ public class EuclideanDistance implements DistanceMeasure {
 
 	@Override
 	public double distance(VectorDoubleWritable v1, VectorDoubleWritable v2) {
-		return v1.euclidianDistance(v2);
+		return this.distance(v1, v2, v1.sumSquare());
 	}
 
 }

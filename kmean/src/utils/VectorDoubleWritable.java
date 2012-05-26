@@ -142,7 +142,7 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		vec.remove(data);
 	}
 
-	public double euclidianDistance(VectorDoubleWritable d)
+	public double euclideanDistance(VectorDoubleWritable d)
 			throws IllegalStateException {
 		if (d.get().size() != vec.size())
 			throw new IllegalStateException("Dimension mismatch!");

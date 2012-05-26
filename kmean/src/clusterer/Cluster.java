@@ -53,9 +53,9 @@ public class Cluster implements Writable {
 		size++;
 	}
 
-	public double distance(VectorDoubleWritable point)
+	public double euclideanDistance(VectorDoubleWritable point)
 			throws IllegalStateException {
-		return point.euclidianDistance(this.getCentroid());
+		return point.euclideanDistance(this.getCentroid());
 	}
 
 	public void omitCluster(Cluster omitee) {
@@ -121,5 +121,14 @@ public class Cluster implements Writable {
 			ite.set(data / size);
 		}
 		return centroid;
+	}
+
+	public double variance() {
+		double s1avg = s1.sum() / size;
+		return s2.sum() / size - s1avg * s1avg;
+	}
+
+	public double standardDiviation() {
+		return Math.sqrt(variance());
 	}
 }
