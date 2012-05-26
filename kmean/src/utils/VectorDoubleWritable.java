@@ -6,14 +6,14 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.StringTokenizer;
 
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 
 public class VectorDoubleWritable implements Writable {
-	private ArrayList<Double> vec = new ArrayList<Double>();
+	protected ArrayList<Double> vec = new ArrayList<Double>();
 
 	public VectorDoubleWritable() {
 		vec.clear();
@@ -31,7 +31,40 @@ public class VectorDoubleWritable implements Writable {
 		return vec;
 	}
 
-	public double euclidianDistance(VectorDoubleWritable d) {
+	public int size() {
+		return vec.size();
+	}
+
+	public double sum() {
+		double sum = 0;
+		for (Double data : vec) {
+			sum += data;
+		}
+		return sum;
+	}
+
+	public VectorDoubleWritable times(VectorDoubleWritable t2) {
+		ListIterator<Double> ite1 = vec.listIterator();
+		ListIterator<Double> ite2 = t2.get().listIterator();
+		VectorDoubleWritable result = new VectorDoubleWritable();
+		while (ite1.hasNext() && ite2.hasNext()) {
+			result.add(ite1.next() * ite2.next());
+		}
+		return result;
+	}
+
+	public void add(Double data) {
+		vec.add(data);
+	}
+
+	public void remove(Double data) {
+		vec.remove(data);
+	}
+
+	public double euclidianDistance(VectorDoubleWritable d)
+			throws IllegalStateException {
+		if (d.get().size() != vec.size())
+			throw new IllegalStateException("Dimension doesn't agree!");
 		Iterator<Double> ite1 = vec.iterator();
 		Iterator<Double> ite2 = d.get().iterator();
 		double dist = 0;
@@ -79,7 +112,10 @@ public class VectorDoubleWritable implements Writable {
 	@Override
 	public void readFields(DataInput in) throws IOException {
 		try {
-			vec.add(in.readDouble());
+			int size = in.readInt();
+			for (int i = 0; i < size; i++) {
+				vec.add(in.readDouble());
+			}
 		} catch (EOFException e) {
 
 		}
@@ -87,6 +123,7 @@ public class VectorDoubleWritable implements Writable {
 
 	@Override
 	public void write(DataOutput out) throws IOException {
+		out.writeInt(vec.size());
 		for (Double data : vec) {
 			out.writeDouble(data);
 		}
