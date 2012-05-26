@@ -22,14 +22,6 @@ public class Cluster implements Writable {
 		size = 0;
 	}
 
-	public VectorDoubleWritable getS2() {
-		return s2;
-	}
-
-	public void setS2(VectorDoubleWritable s2) {
-		this.s2 = s2;
-	}
-
 	public Cluster(int id, VectorDoubleWritable s1, VectorDoubleWritable s2,
 			int size) {
 		super();
@@ -64,6 +56,12 @@ public class Cluster implements Writable {
 		return point.euclidianDistance(this.getCentroid());
 	}
 
+	public void omitCluster(Cluster omitee) {
+		s1 = s1.plus(omitee.getS1());
+		s2 = s2.plus(omitee.getS2());
+		size += omitee.getSize();
+	}
+
 	@Override
 	public void readFields(DataInput in) throws IOException {
 		id = in.readInt();
@@ -94,6 +92,14 @@ public class Cluster implements Writable {
 
 	public void setS1(VectorDoubleWritable s1) {
 		this.s1 = s1;
+	}
+
+	public VectorDoubleWritable getS2() {
+		return s2;
+	}
+
+	public void setS2(VectorDoubleWritable s2) {
+		this.s2 = s2;
 	}
 
 	public int getSize() {
