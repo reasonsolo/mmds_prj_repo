@@ -18,7 +18,7 @@ public class KmeansDriver {
 
 	public static void main(String[] args) {
 		if (args.length < 3) {
-			System.out.println("Usage: " + args[0] + "<input> <output>");
+			System.out.println("Usage: " + args[0] + "<input> <clusters>");
 			System.exit(0);
 		}
 
@@ -26,7 +26,7 @@ public class KmeansDriver {
 
 		Counter converge = null;
 		Counter total = null;
-		Path in;
+		Path in = new Path(args[1]);
 		Path out;
 		int iterCounter = 0;
 		try {
@@ -34,17 +34,19 @@ public class KmeansDriver {
 				Job job = new Job(conf);
 				job.setNumReduceTasks(2);
 				job.setJobName("K-means clustering");
-
 				job.setMapperClass(KmeansMapper.class);
 				job.setReducerClass(KmeansReducer.class);
 				job.setJarByClass(KmeansDriver.class);
 
 				if (iterCounter == 0)
-					in = new Path(args[1]);
+					conf.set(Constants.CLUSTER_PATH, args[2]);
 				else
 					// load the output of last iteration
-					in = new Path(args[1] + ".part" + (iterCounter - 1));
-				out = new Path(args[1] + ".part" + iterCounter);
+					conf.set(Constants.CLUSTER_PATH, 
+							 args[2] + ".part" + (iterCounter-1));
+				out = new Path(args[2] + ".part" + iterCounter);
+				
+
 				SequenceFileInputFormat.addInputPath(job, in);
 				SequenceFileOutputFormat.setOutputPath(job, out);
 
