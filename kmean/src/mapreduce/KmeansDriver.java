@@ -39,6 +39,7 @@ public class KmeansDriver {
 				job.setJarByClass(KmeansDriver.class);
 				
 				out = new Path(args[1] + ".part" + iterCounter);
+				
 				if (iterCounter == 0)
 					conf.set(Constants.CLUSTER_PATH, args[1]);
 				else
@@ -47,9 +48,10 @@ public class KmeansDriver {
 							 args[1] + ".part" + (iterCounter-1));
 				out = new Path(args[1] + ".part" + iterCounter);
 				
+
 				SequenceFileInputFormat.addInputPath(job, in);
 				SequenceFileOutputFormat.setOutputPath(job, out);
-				
+
 				job.setInputFormatClass(SequenceFileInputFormat.class);
 				job.setOutputFormatClass(SequenceFileOutputFormat.class);
 

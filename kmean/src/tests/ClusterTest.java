@@ -1,6 +1,7 @@
 package tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
@@ -35,7 +36,7 @@ public class ClusterTest {
 
 	@Test
 	public void testConstructor() {
-		Cluster c = new Cluster();
+		Cluster c = new Cluster(0);
 		assertEquals(c.getSize(), 0);
 
 		int i = 0;
@@ -57,7 +58,7 @@ public class ClusterTest {
 
 	@Test
 	public void testOmitCluster() {
-		Cluster c1 = new Cluster(), c2 = new Cluster();
+		Cluster c1 = new Cluster(0), c2 = new Cluster(1);
 		assertEquals(c1.getSize(), 0);
 
 		int i = 0;
