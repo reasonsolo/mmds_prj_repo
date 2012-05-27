@@ -26,19 +26,20 @@ public class CanopyDriver {
 		}
 	
 		Configuration conf = new Configuration();
+		
+		conf.set(Constants.T1_KEY, args[1]);
+		conf.set(Constants.T2_KEY, args[2]);
+		
 		Path in = new Path(args[3]);
 		Path out = new Path(args[4]);
 		
-		Counter converge = null;
-		Counter total = null;
 		
 		try {
 
-			while (converge != total) {
 				Job job = new Job(conf);
 				job.setNumReduceTasks(2);
 				job.setJobName("Canopy clustering");
-
+				
 				job.setMapperClass(CanopyMapper.class);
 				job.setReducerClass(CanopyReducer.class);
 				job.setJarByClass(CanopyDriver.class);
@@ -52,14 +53,7 @@ public class CanopyDriver {
 				job.setOutputValueClass(Canopy.class);
 
 				job.waitForCompletion(true);
-				
-				//TODO set the converge value
 
-				/*converge = job.getCounters().getGroup(Constants.COUNTER_GROUP)
-						.findCounter(Constants.COUNTER_CONVERGED);
-				total = job.getCounters().getGroup(Constants.COUNTER_GROUP)
-						.findCounter(Constants.COUNTER_TOTAL);*/
-			}
 
 		} catch (Exception e) {
 			// TODO:

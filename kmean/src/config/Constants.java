@@ -8,4 +8,8 @@ public class Constants {
 	public static String COUNTER_GROUP = "Clusterer";
 	public static String COUNTER_TOTAL = "TotalCluster";
 	public static String COUNTER_CONVERGED = "ConvergedCluster";
+	
+	
+	public static String T1_KEY = "T1Key";
+	public static String T2_KEY = "T2Key";
 }

@@ -42,6 +42,10 @@ public class CanopyClusterer {
 
 	public CanopyClusterer(Configuration configuration) {
 		// TODO Auto-generated constructor stub
+		canopies.clear();
+		this.t1 = Double.parseDouble( configuration.get(config.Constants.T1_KEY ) );
+		this.t2 = Double.parseDouble( configuration.get(config.Constants .T2_KEY) );
+		nextID = 0;
 	}
 
 	public void loadClusters(String clusterPath, Configuration conf) // need to
