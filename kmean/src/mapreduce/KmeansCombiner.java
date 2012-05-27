@@ -14,7 +14,7 @@ public class KmeansCombiner
 
 	public void reduce(IntWritable key, Iterable<VectorDoubleWritable> values,
 			Context context) throws IOException {
-		Cluster cluster = new Cluster();
+		Cluster cluster = new Cluster(key.get());
 		for (VectorDoubleWritable point : values) {
 			cluster.addPoint(point);
 		}

@@ -38,16 +38,16 @@ public class KmeansDriver {
 				job.setMapperClass(KmeansMapper.class);
 				job.setReducerClass(KmeansReducer.class);
 				job.setJarByClass(KmeansDriver.class);
-				
+
 				if (iterCounter == 0)
 					in = new Path(args[1]);
 				else
 					// load the output of last iteration
-					in = new Path(args[1] + ".part" + (iterCounter-1));
+					in = new Path(args[1] + ".part" + (iterCounter - 1));
 				out = new Path(args[1] + ".part" + iterCounter);
 				SequenceFileInputFormat.addInputPath(job, in);
 				SequenceFileOutputFormat.setOutputPath(job, out);
-				
+
 				job.setInputFormatClass(SequenceFileInputFormat.class);
 				job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
