@@ -183,8 +183,9 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 			return false;
 		Iterator<Double> ite1 = vec.iterator();
 		Iterator<Double> ite2 = other.get().iterator();
+
 		for (; ite1.hasNext() && ite2.hasNext();) {
-			if (ite1.next() != ite2.next())
+			if (Math.abs(ite1.next() - ite2.next()) > 0.00000000000001)
 				return false;
 		}
 		return true;

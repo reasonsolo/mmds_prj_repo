@@ -22,33 +22,38 @@ public class Cluster implements Writable {
 		size = 0;
 	}
 
-	public Cluster(int id, VectorDoubleWritable s1, VectorDoubleWritable s2,
-			int size) {
+	public Cluster(int id, VectorDoubleWritable s1, VectorDoubleWritable s2)
+			throws IllegalStateException {
 		super();
 		if (s1.size() != s2.size())
 			throw new IllegalStateException("S1/S2 dimension mismatch!");
 		this.s1 = s1;
 		this.s2 = s2;
-		this.size = size;
+		this.size = s1.size();
 		this.id = id;
 	}
 
 	public void addPoint(VectorDoubleWritable point)
 			throws IllegalStateException {
-		if (s1.size() != point.size())
-			throw new IllegalStateException("Dimension mismatch!");
-		ListIterator<Double> ite1 = point.get().listIterator();
-		ListIterator<Double> ite2 = s1.get().listIterator();
-		ListIterator<Double> ite3 = s2.get().listIterator();
-		Double p = 0.0;
-		Double c = 0.0;
-		Double s = 0.0;
-		for (; ite1.hasNext();) {
-			p = ite1.next();
-			c = ite2.next();
-			s = ite3.next();
-			ite2.set(c + p);
-			ite3.set(s + p * p);
+		if (size == 0) {
+			s1 = (VectorDoubleWritable) point.clone();
+			s2 = point.times(point);
+		} else {
+			if ((s1.size() != point.size()))
+				throw new IllegalStateException("Dimension mismatch!");
+			ListIterator<Double> ite1 = point.get().listIterator();
+			ListIterator<Double> ite2 = s1.get().listIterator();
+			ListIterator<Double> ite3 = s2.get().listIterator();
+			Double p = 0.0;
+			Double c = 0.0;
+			Double s = 0.0;
+			for (; ite1.hasNext();) {
+				p = ite1.next();
+				c = ite2.next();
+				s = ite3.next();
+				ite2.set(c + p);
+				ite3.set(s + p * p);
+			}
 		}
 		size++;
 	}
@@ -104,7 +109,7 @@ public class Cluster implements Writable {
 		this.s2 = s2;
 	}
 
-	public Integer getSize() {
+	public int getSize() {
 		return size;
 	}
 
