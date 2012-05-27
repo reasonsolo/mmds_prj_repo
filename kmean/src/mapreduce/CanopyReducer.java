@@ -7,14 +7,15 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
+import clusterer.CanopyCluster;
+import clusterer.CanopyClusterer;
+
 import utils.VectorDoubleWritable;
-import canopy.Canopy;
-import canopy.CanopyClusterer;
 
 public class CanopyReducer extends
-		Reducer<IntWritable, VectorDoubleWritable, Text, Canopy> {
+		Reducer<IntWritable, VectorDoubleWritable, Text, CanopyCluster> {
 
-	private final ArrayList<Canopy> canopies = new ArrayList<Canopy>();
+	private final ArrayList<CanopyCluster> canopies = new ArrayList<CanopyCluster>();
 
 	private CanopyClusterer canopyClusterer;
 
@@ -31,7 +32,7 @@ public class CanopyReducer extends
 
 		}
 
-		for (Canopy canopy : canopies) {
+		for (CanopyCluster canopy : canopies) {
 			context.write(new Text(canopy.getId().toString()), canopy);
 		}
 	}

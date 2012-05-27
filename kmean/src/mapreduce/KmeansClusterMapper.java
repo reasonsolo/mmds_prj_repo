@@ -9,8 +9,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import utils.VectorDoubleWritable;
-import clusterer.Cluster;
-import clusterer.Clusterer;
+import clusterer.KmeansCluster;
+import clusterer.KmeansClusterer;
 import config.Constants;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
@@ -18,13 +18,13 @@ import distanceMeasure.EuclideanDistance;
 public class KmeansClusterMapper extends
 		Mapper<IntWritable, Text, IntWritable, IntWritable> {
 	private VectorDoubleWritable point = null;
-	protected Clusterer clusterer = new Clusterer();
+	protected KmeansClusterer clusterer = new KmeansClusterer();
 
 	public void map(IntWritable key, Text values, Context context)
 			throws IOException {
 		point = new VectorDoubleWritable(values);
 
-		Cluster cluster = null;
+		KmeansCluster cluster = null;
 		try {
 			cluster = clusterer.findNearestCluster(point);
 			// TODO Find a proper way to represent the clustering result.
@@ -54,7 +54,7 @@ public class KmeansClusterMapper extends
 			e.printStackTrace();
 		}
 
-		this.clusterer = new Clusterer(dm);
+		this.clusterer = new KmeansClusterer(dm);
 
 		String clusterPath = conf.get(Constants.CLUSTER_PATH);
 		if (clusterPath != null && !clusterPath.isEmpty())
