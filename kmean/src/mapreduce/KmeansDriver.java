@@ -17,8 +17,8 @@ public class KmeansDriver {
 	}
 
 	public static void main(String[] args) {
-		if (args.length < 3) {
-			System.out.println("Usage: " + args[0] + "<input> <clusters>");
+		if (args.length < 2) {
+			System.out.println("Usage: program <input> <clusters>");
 			System.exit(0);
 		}
 
@@ -26,7 +26,7 @@ public class KmeansDriver {
 
 		Counter converge = null;
 		Counter total = null;
-		Path in = new Path(args[1]);
+		Path in = new Path(args[0]);
 		Path out;
 		int iterCounter = 0;
 		try {
@@ -37,14 +37,16 @@ public class KmeansDriver {
 				job.setMapperClass(KmeansMapper.class);
 				job.setReducerClass(KmeansReducer.class);
 				job.setJarByClass(KmeansDriver.class);
-
+				
+				out = new Path(args[1] + ".part" + iterCounter);
+				
 				if (iterCounter == 0)
-					conf.set(Constants.CLUSTER_PATH, args[2]);
+					conf.set(Constants.CLUSTER_PATH, args[1]);
 				else
 					// load the output of last iteration
 					conf.set(Constants.CLUSTER_PATH, 
-							 args[2] + ".part" + (iterCounter-1));
-				out = new Path(args[2] + ".part" + iterCounter);
+							 args[1] + ".part" + (iterCounter-1));
+				out = new Path(args[1] + ".part" + iterCounter);
 				
 
 				SequenceFileInputFormat.addInputPath(job, in);
