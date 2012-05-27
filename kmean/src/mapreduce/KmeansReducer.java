@@ -9,23 +9,23 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
-import clusterer.Cluster;
-import clusterer.Clusterer;
+import clusterer.KmeansCluster;
+import clusterer.KmeansClusterer;
 import config.Constants;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 
 public class KmeansReducer extends
-		Reducer<IntWritable, Cluster, IntWritable, Cluster> {
-	protected Clusterer clusterer;
+		Reducer<IntWritable, KmeansCluster, IntWritable, KmeansCluster> {
+	protected KmeansClusterer clusterer;
 	protected double threshold;
-	Map<IntWritable, Cluster> clusterMap = new HashMap<IntWritable, Cluster>();
+	Map<IntWritable, KmeansCluster> clusterMap = new HashMap<IntWritable, KmeansCluster>();
 
 	@Override
-	public void reduce(IntWritable key, Iterable<Cluster> values,
+	public void reduce(IntWritable key, Iterable<KmeansCluster> values,
 			Context context) throws IOException {
-		Cluster cluster = clusterMap.get(key);
-		for (Cluster value : values) {
+		KmeansCluster cluster = clusterMap.get(key);
+		for (KmeansCluster value : values) {
 			cluster.omitCluster(value);
 		}
 
@@ -55,7 +55,7 @@ public class KmeansReducer extends
 			e.printStackTrace();
 		}
 
-		this.clusterer = new Clusterer(dm);
+		this.clusterer = new KmeansClusterer(dm);
 
 		String clusterPath = conf.get(Constants.CLUSTER_PATH);
 		if (clusterPath != null && !clusterPath.isEmpty())

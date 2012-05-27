@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import utils.VectorDoubleWritable;
-import clusterer.Cluster;
+import clusterer.KmeansCluster;
 
 public class ClusterTest {
 	VectorDoubleWritable vec[] = new VectorDoubleWritable[10];
@@ -36,7 +36,7 @@ public class ClusterTest {
 
 	@Test
 	public void testConstructor() {
-		Cluster c = new Cluster(0);
+		KmeansCluster c = new KmeansCluster(0);
 		assertEquals(c.getSize(), 0);
 
 		int i = 0;
@@ -58,7 +58,7 @@ public class ClusterTest {
 
 	@Test
 	public void testOmitCluster() {
-		Cluster c1 = new Cluster(0), c2 = new Cluster(1);
+		KmeansCluster c1 = new KmeansCluster(0), c2 = new KmeansCluster(1);
 		assertEquals(c1.getSize(), 0);
 
 		int i = 0;

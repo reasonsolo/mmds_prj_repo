@@ -9,7 +9,7 @@ import org.apache.hadoop.io.Writable;
 
 import utils.VectorDoubleWritable;
 
-public class Cluster implements Writable {
+public class Cluster implements Writable{
 	protected Integer id;
 	protected Integer size;
 	protected VectorDoubleWritable s1;
@@ -32,6 +32,7 @@ public class Cluster implements Writable {
 	public Cluster(int id, VectorDoubleWritable s1, VectorDoubleWritable s2)
 			throws IllegalStateException {
 		super();
+		
 		if (s1.size() != s2.size())
 			throw new IllegalStateException("S1/S2 dimension mismatch!");
 		this.s1 = s1;
@@ -40,6 +41,7 @@ public class Cluster implements Writable {
 		this.id = id;
 	}
 
+	
 	public void addPoint(VectorDoubleWritable point)
 			throws IllegalStateException {
 		if (size == 0) {
@@ -64,13 +66,13 @@ public class Cluster implements Writable {
 		}
 		size++;
 	}
-
+	
 	public double euclideanDistance(VectorDoubleWritable point)
 			throws IllegalStateException {
 		return point.euclideanDistance(this.getCentroid());
 	}
 
-	public void omitCluster(Cluster omitee) {
+	public void omitCluster(KmeansCluster omitee) {
 		s1 = s1.plus(omitee.getS1());
 		s2 = s2.plus(omitee.getS2());
 		size += omitee.getSize();

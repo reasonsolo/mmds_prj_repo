@@ -7,7 +7,9 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-import canopy.Canopy;
+import utils.VectorDoubleWritable;
+import clusterer.CanopyCluster;
+
 import config.Constants;
 
 public class CanopyDriver {
@@ -46,7 +48,7 @@ public class CanopyDriver {
 			job.setOutputFormatClass(TextOutputFormat.class);
 
 			job.setOutputKeyClass(IntWritable.class);
-			job.setOutputValueClass(Canopy.class);
+			job.setOutputValueClass(VectorDoubleWritable.class);
 
 			job.waitForCompletion(true);
 

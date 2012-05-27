@@ -8,7 +8,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
-import clusterer.Cluster;
+import clusterer.KmeansCluster;
 import config.Constants;
 
 public class KmeansDriver {
@@ -48,7 +48,7 @@ public class KmeansDriver {
 				out = new Path(args[1] + ".part" + iterCounter);
 
 				job.setOutputKeyClass(IntWritable.class);
-				job.setOutputValueClass(Cluster.class);
+				job.setOutputValueClass(KmeansCluster.class);
 
 				FileInputFormat.addInputPath(job, in);
 				SequenceFileOutputFormat.setOutputPath(job, out);

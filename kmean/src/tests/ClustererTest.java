@@ -22,12 +22,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import utils.VectorDoubleWritable;
-import clusterer.Cluster;
-import clusterer.Clusterer;
+import clusterer.KmeansCluster;
+import clusterer.KmeansClusterer;
 
 public class ClustererTest {
-	Clusterer clusterer = new Clusterer();
-	Cluster clusters[] = new Cluster[5];
+	KmeansClusterer clusterer = new KmeansClusterer();
+	KmeansCluster clusters[] = new KmeansCluster[5];
 	VectorDoubleWritable vec[] = new VectorDoubleWritable[20];
 
 	@Before
@@ -50,10 +50,10 @@ public class ClustererTest {
 			SequenceFile.Writer writer = null;
 
 			writer = new SequenceFile.Writer(fs, conf, path, IntWritable.class,
-					Cluster.class);
+					KmeansCluster.class);
 
 			for (int i = 0; i < 3; i++) {
-				clusters[i] = new Cluster(i);
+				clusters[i] = new KmeansCluster(i);
 				clusters[i].addPoint(vec[i]);
 
 				writer.append(new IntWritable(i), clusters[i]);
@@ -76,12 +76,12 @@ public class ClustererTest {
 		Configuration conf = new Configuration();
 		String clusterPath = "hdfs://master:54310/kmeans/initial/initial";
 
-		ArrayList<Cluster> clusters = clusterer.getClusters();
+		ArrayList<KmeansCluster> clusters = clusterer.getClusters();
 		assertEquals(clusters.size(), 0);
 
 		clusterer.loadClusters(clusterPath, conf);
 
-		for (Cluster cluster : clusters) {
+		for (KmeansCluster cluster : clusters) {
 			assertTrue(clusterer.getClusters().contains(cluster));
 		}
 

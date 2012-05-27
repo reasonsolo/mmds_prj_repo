@@ -1,4 +1,4 @@
-package canopy;
+package clusterer;
 
 import java.io.IOException;
 import java.net.URI;
@@ -14,13 +14,14 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.util.ReflectionUtils;
 
+
 import utils.VectorDoubleWritable;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 
 public class CanopyClusterer {
-	protected ArrayList<Canopy> canopies = new ArrayList<Canopy>();
-	protected HashMap<Integer, Canopy> clusterMap = new HashMap<Integer, Canopy>();
+	protected ArrayList<CanopyCluster> canopies = new ArrayList<CanopyCluster>();
+	protected HashMap<Integer, CanopyCluster> clusterMap = new HashMap<Integer, CanopyCluster>();
 	protected DistanceMeasure dm;
 	protected double t1;
 	protected double t2;
@@ -62,7 +63,7 @@ public class CanopyClusterer {
 		reader = new SequenceFile.Reader(fs, path, conf);
 		IntWritable key = (IntWritable) ReflectionUtils.newInstance(
 				reader.getKeyClass(), conf);
-		Canopy value = (Canopy) ReflectionUtils.newInstance(
+		CanopyCluster value = (CanopyCluster) ReflectionUtils.newInstance(
 				reader.getValueClass(), conf);
 
 		while (reader.next(key, value)) {
@@ -72,12 +73,12 @@ public class CanopyClusterer {
 		IOUtils.closeStream(reader);
 	}
 
-	public Canopy findNearestCluster(VectorDoubleWritable point)
+	public CanopyCluster findNearestCluster(VectorDoubleWritable point)
 			throws IllegalStateException {
-		Canopy nearest = null;
+		CanopyCluster nearest = null;
 		double mindist = Double.MAX_VALUE;
 		double tempdist = 0;
-		for (Canopy cluster : canopies) {
+		for (CanopyCluster cluster : canopies) {
 			tempdist = cluster.euclideanDistance(point);
 			if (tempdist < mindist) {
 				mindist = tempdist;
@@ -86,12 +87,11 @@ public class CanopyClusterer {
 		}
 		return nearest;
 	}
-
 	public boolean addPointToCanopies(VectorDoubleWritable point,
-			ArrayList<Canopy> canopies) throws IllegalStateException {
+			ArrayList<CanopyCluster> canopies) throws IllegalStateException {
 		boolean flag = false;
 		double tempdist = 0;
-		for (Canopy canopy : canopies) {
+		for (CanopyCluster canopy : canopies) {
 			tempdist = canopy.euclideanDistance(point);
 			if (tempdist < this.t1) {
 				canopy.addPoint(point);
@@ -99,14 +99,13 @@ public class CanopyClusterer {
 			}
 		}
 		if (flag == false) {
-
-			Canopy newCanopy = new Canopy(nextID++, point);
+			CanopyCluster newCanopy = new CanopyCluster(nextID++, point);
 			canopies.add(newCanopy);
 		}
 		return flag;
 	}
 
-	public ArrayList<Canopy> getClusters() {
+	public ArrayList<CanopyCluster> getClusters() {
 		return this.canopies;
 	}
 }
