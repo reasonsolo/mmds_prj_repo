@@ -11,7 +11,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import utils.VectorDoubleWritable;
 import clusterer.Cluster;
 import clusterer.Clusterer;
-import config.ConfigConstants;
+import config.Constants;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 
@@ -46,7 +46,7 @@ public class KmeansClusterMapper extends
 		try {
 			dm = (DistanceMeasure) Class.forName(
 					"distanceMeasure."
-							+ conf.get(ConfigConstants.DISTANCE_MEASURE,
+							+ conf.get(Constants.DISTANCE_MEASURE,
 									"EuclideanDistance")).newInstance();
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException e) {
@@ -56,7 +56,7 @@ public class KmeansClusterMapper extends
 
 		this.clusterer = new Clusterer(dm);
 
-		String clusterPath = conf.get(ConfigConstants.CLUSTER_PATH);
+		String clusterPath = conf.get(Constants.CLUSTER_PATH);
 		if (clusterPath != null && !clusterPath.isEmpty())
 			try {
 				this.clusterer.loadClusters(clusterPath, conf);

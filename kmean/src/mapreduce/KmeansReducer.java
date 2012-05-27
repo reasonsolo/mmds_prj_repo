@@ -11,7 +11,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import clusterer.Cluster;
 import clusterer.Clusterer;
-import config.ConfigConstants;
+import config.Constants;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 
@@ -32,8 +32,8 @@ public class KmeansReducer extends
 		if (clusterer.isConverged(cluster, threshold))
 			context.getCounter("Clusterer", "Converged Cluster").increment(1);
 		try {
-            // increase counter
-            context.getCounter(UpdateCounter.UPDATED).increment(1);
+			// increase counter
+			// context.getCounter(UpdateCounter.UPDATED).increment(1);
 			context.write(key, cluster);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -48,12 +48,12 @@ public class KmeansReducer extends
 	public void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
-		threshold = conf.getFloat(ConfigConstants.THRESHOLD, 1);
+		threshold = conf.getFloat(Constants.THRESHOLD, 1);
 		DistanceMeasure dm = null;
 		try {
 			dm = (DistanceMeasure) Class.forName(
 					"distanceMeasure."
-							+ conf.get(ConfigConstants.DISTANCE_MEASURE,
+							+ conf.get(Constants.DISTANCE_MEASURE,
 									"EuclideanDistance")).newInstance();
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException e) {
@@ -63,7 +63,7 @@ public class KmeansReducer extends
 
 		this.clusterer = new Clusterer(dm);
 
-		String clusterPath = conf.get(ConfigConstants.CLUSTER_PATH);
+		String clusterPath = conf.get(Constants.CLUSTER_PATH);
 		if (clusterPath != null && !clusterPath.isEmpty())
 			try {
 				this.clusterer.loadClusters(clusterPath, conf);
