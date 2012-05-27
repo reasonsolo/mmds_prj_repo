@@ -36,9 +36,6 @@ public class KmeansReducer extends
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		// TODO:
-		// The reducer should output the (partial) result anyway...
 	}
 
 	@Override
