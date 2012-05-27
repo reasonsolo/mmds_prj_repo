@@ -2,50 +2,55 @@ package mapreduce;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-import clusterer.Cluster;
-import clusterer.Clusterer;
-import config.ConfigConstants;
+import canopy.*;
+
+import utils.VectorDoubleWritable;
+
+import config.Constants;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 
-
 public class CanopyReducer extends
-		Reducer<Text, VectorWritable, Text, Canopy>	{
+		Reducer<IntWritable, VectorDoubleWritable, Text, Canopy>	{
 	
-	private final Collection<Canopy> canopies = new ArrayList<Canopy>();
+	private final ArrayList<Canopy> canopies = new ArrayList<Canopy>();
 
-	private CanopyCluster canopyCluster;
+	private CanopyClusterer canopyClusterer;
 
-	CanopyCluster getCanopyClusterer() {
+	CanopyClusterer getCanopyClusterer() 
+		{
 		return canopyClusterer;
-	}
+		}
+		
 	
 	
 	@Override 
-	protected void reduce (Text arg0, Iterable<VectorWritable> values, Context contex)
-		throw IOException, InterruptedException	{
+	public void reduce (IntWritable key, Iterable<VectorDoubleWritable> values, Context context)
+		throws IOException, InterruptedException	{
 
-		for(VectorWritable value : vakues)	{
-			canopyClusterer.addPointToCanopies(point, canopies);
+		for(VectorDoubleWritable value : values)	{
+			canopyClusterer.addPointToCanopies(value, canopies);
 
 		}
 		
 		for(Canopy canopy: canopies){
-			context.write(new Text(canopy.getID() ) , canopy);
+			context.write(new Text(canopy.getId().toString() ) , canopy);
 		}
 	}
 
 	@Override
-	protected void setup(Context context) throw IOException, InterruptedExcetion	{
+	public void setup(Context context) throws IOException, InterruptedException	{
 		super.setup(context);
-		canopyCLusterer = new CanopyCluster ( context.getConfiguration());
+		canopyClusterer = new CanopyClusterer ( context.getConfiguration());
 	}
 }
 

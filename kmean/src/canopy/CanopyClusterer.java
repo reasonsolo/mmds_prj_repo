@@ -1,4 +1,4 @@
-package canopycluster;
+package canopy;
 
 import java.io.IOException;
 import java.net.URI;
@@ -18,7 +18,7 @@ import utils.VectorDoubleWritable;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 
-public CanopyClusterer	{
+public class CanopyClusterer {
 	protected ArrayList<Canopy> canopies = new ArrayList<Canopy>();
 	protected HashMap<Integer, Canopy> clusterMap = new HashMap<Integer, Canopy>();
 	protected DistanceMeasure dm;
@@ -29,18 +29,24 @@ public CanopyClusterer	{
 	public CanopyClusterer() {
 		canopies.clear();
 		this.dm = new EuclideanDistance();
-		nextID=0;
+		nextID = 0;
 	}
 
-	public CanopyClusterer(DistanceMeasure dm,double t1, double t2) {
+	public CanopyClusterer(DistanceMeasure dm, double t1, double t2) {
 		canopies.clear();
 		this.dm = dm;
 		this.t1 = t1;
 		this.t2 = t2;
-		nextID=0;
+		nextID = 0;
 	}
 
-	public void loadClusters(String clusterPath, Configuration conf)   //need to be checked
+	public CanopyClusterer(Configuration configuration) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void loadClusters(String clusterPath, Configuration conf) // need to
+																		// be
+																		// checked
 			throws IOException, URISyntaxException {
 		Path path = new Path(clusterPath);
 		FileSystem fs = FileSystem.get(new URI(clusterPath), conf);
@@ -75,30 +81,26 @@ public CanopyClusterer	{
 		return nearest;
 	}
 
-	public int addPointToCanopies (VectorDoubleWratable point, ArrayList<Canopy> canopies)
-		throw IllegalStateException	{
-		boolean flag=false;
-		double tempdist=0;
+	public boolean addPointToCanopies(VectorDoubleWritable point,
+			ArrayList<Canopy> canopies) throws IllegalStateException {
+		boolean flag = false;
+		double tempdist = 0;
 		for (Canopy canopy : canopies) {
 			tempdist = canopy.euclideanDistance(point);
 			if (tempdist < this.t1) {
 				canopy.addPoint(point);
-				flag=true;
-				}		
-			}
-		if(flag==false){
-
-			Canopy newCanopy = new Canopy( nextID++, point);
-			canopies.add(newCanopy);
+				flag = true;
 			}
 		}
-		
-		
-		
-		
+		if (flag == false) {
+
+			Canopy newCanopy = new Canopy(nextID++, point);
+			canopies.add(newCanopy);
+		}
+		return flag;
+	}
 
 	public ArrayList<Canopy> getClusters() {
 		return this.canopies;
 	}
-
-
+}

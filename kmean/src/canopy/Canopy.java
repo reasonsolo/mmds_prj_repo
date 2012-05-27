@@ -1,4 +1,4 @@
-package canopycluster;
+package canopy;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -9,11 +9,10 @@ import org.apache.hadoop.io.Writable;
 
 import utils.VectorDoubleWritable;
 
-
 public class Canopy implements Writable {
 	protected Integer id;
 	protected Integer size;
-	protected VectorDoubleWrotable center;
+	protected VectorDoubleWritable center;
 	protected VectorDoubleWritable s1;
 	protected VectorDoubleWritable s2;
 	protected VectorDoubleWritable weight;
@@ -24,23 +23,20 @@ public class Canopy implements Writable {
 		weight = new VectorDoubleWritable();
 		center = new VectorDoubleWritable();
 		size = 0;
-		
+
 	}
-	
+
 	public Canopy(int i, VectorDoubleWritable c) {
-		id=i;
+		id = i;
 		s1 = new VectorDoubleWritable();
 		s2 = new VectorDoubleWritable();
 		weight = new VectorDoubleWritable();
-		center=c;
-		size=1;
+		center = c;
+		size = 1;
 	}
 
-	
-
-	public void addPoint ( VectorDoubleWritable point)
-			throw IllegalStateException
-	{
+	public void addPoint(VectorDoubleWritable point)
+			throws IllegalStateException {
 		if (s1.size() != point.size())
 			throw new IllegalStateException("Dimension mismatch!");
 		ListIterator<Double> ite1 = point.get().listIterator();
@@ -59,13 +55,13 @@ public class Canopy implements Writable {
 		size++;
 	}
 
-
 	public double euclideanDistance(VectorDoubleWritable point)
 			throws IllegalStateException {
 		return point.euclideanDistance(this.center);
 	}
 
-	@Override						//read and write
+	@Override
+	// read and write
 	public void readFields(DataInput in) throws IOException {
 		id = in.readInt();
 		size = in.readInt();
@@ -78,12 +74,11 @@ public class Canopy implements Writable {
 	public void write(DataOutput out) throws IOException {
 		out.writeInt(id);
 		out.writeDouble(size);
-		center.writeDouble(out);
+		center.write(out);
 		s1.write(out);
 		s2.write(out);
 	}
 
-	
 	public Integer getId() {
 		return id;
 	}
@@ -116,7 +111,6 @@ public class Canopy implements Writable {
 		this.size = size;
 	}
 
-
 	public VectorDoubleWritable getCentroid() {
 		VectorDoubleWritable centroid = (VectorDoubleWritable) s1.clone();
 		ListIterator<Double> ite = centroid.get().listIterator();
@@ -140,8 +134,4 @@ public class Canopy implements Writable {
 	public VectorDoubleWritable getCenter() {
 		return center;
 	}
-		
-
-
-
-
+}
