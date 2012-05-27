@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import clusterer.KmeansCluster;
@@ -16,15 +16,15 @@ import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 
 public class KmeansReducer extends
-		Reducer<IntWritable, KmeansCluster, IntWritable, KmeansCluster> {
+		Reducer<LongWritable, KmeansCluster, LongWritable, KmeansCluster> {
 	protected KmeansClusterer clusterer;
 	protected double threshold;
-	Map<IntWritable, KmeansCluster> clusterMap = new HashMap<IntWritable, KmeansCluster>();
+	Map<Long, KmeansCluster> clusterMap = new HashMap<Long, KmeansCluster>();
 
 	@Override
-	public void reduce(IntWritable key, Iterable<KmeansCluster> values,
+	public void reduce(LongWritable key, Iterable<KmeansCluster> values,
 			Context context) throws IOException {
-		KmeansCluster cluster = clusterMap.get(key);
+		KmeansCluster cluster = clusterMap.get(key.get());
 		for (KmeansCluster value : values) {
 			cluster.omitCluster(value);
 		}
@@ -61,6 +61,9 @@ public class KmeansReducer extends
 		if (clusterPath != null && !clusterPath.isEmpty())
 			try {
 				this.clusterer.loadClusters(clusterPath, conf);
+				for (KmeansCluster cluster : this.clusterer.getClusters()) {
+					clusterMap.put(new Long(cluster.getId()), cluster);
+				}
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}

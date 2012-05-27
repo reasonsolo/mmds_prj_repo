@@ -145,7 +145,8 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 	public double euclideanDistance(VectorDoubleWritable d)
 			throws IllegalStateException {
 		if (d.get().size() != vec.size())
-			throw new IllegalStateException("Dimension mismatch!");
+			throw new IllegalStateException(
+					"Dimension mismatch calculating euclidean distance.");
 		Iterator<Double> ite1 = vec.iterator();
 		Iterator<Double> ite2 = d.get().iterator();
 		double dist = 0;

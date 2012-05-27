@@ -2,21 +2,19 @@ package mapreduce;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
-import utils.VectorDoubleWritable;
 import clusterer.KmeansCluster;
 
-public class KmeansCombiner
-		extends
-		Reducer<IntWritable, Iterable<VectorDoubleWritable>, IntWritable, KmeansCluster> {
+public class KmeansCombiner extends
+		Reducer<LongWritable, KmeansCluster, LongWritable, KmeansCluster> {
 
-	public void reduce(IntWritable key, Iterable<VectorDoubleWritable> values,
+	public void reduce(LongWritable key, Iterable<KmeansCluster> values,
 			Context context) throws IOException {
-		KmeansCluster cluster = new KmeansCluster(key.get());
-		for (VectorDoubleWritable point : values) {
-			cluster.addPoint(point);
+		KmeansCluster cluster = new KmeansCluster((int) key.get());
+		for (KmeansCluster point : values) {
+			cluster.omitCluster(point);
 		}
 		try {
 			context.write(key, cluster);

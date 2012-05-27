@@ -3,13 +3,12 @@ package clusterer;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.ListIterator;
 
 import org.apache.hadoop.io.Writable;
 
 import utils.VectorDoubleWritable;
 
-public class Cluster implements Writable{
+public abstract class Cluster implements Writable, Cloneable {
 	protected Integer id;
 	protected Integer size;
 	protected VectorDoubleWritable s1;
@@ -32,7 +31,7 @@ public class Cluster implements Writable{
 	public Cluster(int id, VectorDoubleWritable s1, VectorDoubleWritable s2)
 			throws IllegalStateException {
 		super();
-		
+
 		if (s1.size() != s2.size())
 			throw new IllegalStateException("S1/S2 dimension mismatch!");
 		this.s1 = s1;
@@ -41,7 +40,6 @@ public class Cluster implements Writable{
 		this.id = id;
 	}
 
-	
 	public void addPoint(VectorDoubleWritable point)
 			throws IllegalStateException {
 		if (size == 0) {
@@ -50,23 +48,24 @@ public class Cluster implements Writable{
 		} else {
 			if ((s1.size() != point.size()))
 				throw new IllegalStateException("Dimension mismatch!");
-			ListIterator<Double> ite1 = point.get().listIterator();
-			ListIterator<Double> ite2 = s1.get().listIterator();
-			ListIterator<Double> ite3 = s2.get().listIterator();
-			Double p = 0.0;
-			Double c = 0.0;
-			Double s = 0.0;
-			for (; ite1.hasNext();) {
-				p = ite1.next();
-				c = ite2.next();
-				s = ite3.next();
-				ite2.set(c + p);
-				ite3.set(s + p * p);
-			}
+			s1 = s1.plus(point);
+			s2 = s2.plus(point.times(point));/*
+											 * ListIterator<Double> ite1 =
+											 * point.get().listIterator();
+											 * ListIterator<Double> ite2 =
+											 * s1.get().listIterator();
+											 * ListIterator<Double> ite3 =
+											 * s2.get().listIterator(); Double p
+											 * = 0.0; Double c = 0.0; Double s =
+											 * 0.0; for (; ite1.hasNext();) { p
+											 * = ite1.next(); c = ite2.next(); s
+											 * = ite3.next(); ite2.set(c + p);
+											 * ite3.set(s + p * p); }
+											 */
 		}
 		size++;
 	}
-	
+
 	public double euclideanDistance(VectorDoubleWritable point)
 			throws IllegalStateException {
 		return point.euclideanDistance(this.getCentroid());
@@ -92,6 +91,16 @@ public class Cluster implements Writable{
 		out.writeInt(size);
 		s1.write(out);
 		s2.write(out);
+	}
+
+	@Override
+	public Object clone() {
+		KmeansCluster clone = new KmeansCluster();
+		clone.setId(new Integer(this.id));
+		clone.setSize(new Integer(this.size));
+		clone.setS1((VectorDoubleWritable) this.s1.clone());
+		clone.setS2((VectorDoubleWritable) this.s2.clone());
+		return clone;
 	}
 
 	public Integer getId() {
@@ -127,14 +136,7 @@ public class Cluster implements Writable{
 	}
 
 	public VectorDoubleWritable getCentroid() {
-		VectorDoubleWritable centroid = (VectorDoubleWritable) s1.clone();
-		ListIterator<Double> ite = centroid.get().listIterator();
-		double data = 0;
-		while (ite.hasNext()) {
-			data = ite.next();
-			ite.set(data / size);
-		}
-		return centroid;
+		return s1.divides(this.size);
 	}
 
 	public double variance() {

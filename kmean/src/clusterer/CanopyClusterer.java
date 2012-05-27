@@ -10,10 +10,9 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.util.ReflectionUtils;
-
 
 import utils.VectorDoubleWritable;
 import distanceMeasure.DistanceMeasure;
@@ -61,7 +60,7 @@ public class CanopyClusterer {
 		SequenceFile.Reader reader = null;
 
 		reader = new SequenceFile.Reader(fs, path, conf);
-		IntWritable key = (IntWritable) ReflectionUtils.newInstance(
+		LongWritable key = (LongWritable) ReflectionUtils.newInstance(
 				reader.getKeyClass(), conf);
 		CanopyCluster value = (CanopyCluster) ReflectionUtils.newInstance(
 				reader.getValueClass(), conf);
@@ -87,6 +86,7 @@ public class CanopyClusterer {
 		}
 		return nearest;
 	}
+
 	public boolean addPointToCanopies(VectorDoubleWritable point,
 			ArrayList<CanopyCluster> canopies) throws IllegalStateException {
 		boolean flag = false;

@@ -5,8 +5,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ListIterator;
 
-import org.apache.hadoop.io.Writable;
-
 import utils.VectorDoubleWritable;
 
 public class CanopyCluster extends Cluster {
@@ -20,17 +18,10 @@ public class CanopyCluster extends Cluster {
 	}
 
 	public CanopyCluster(int i, VectorDoubleWritable c) {
-		s1 = (VectorDoubleWritable) c.clone();
-		s2 = new VectorDoubleWritable();
-		ListIterator<Double> ite1 = s1.get().listIterator();
-		double p = 0.0;
-		for (; ite1.hasNext();) {
-			p = ite1.next();
-			s2.append(p * p);
-		}
+		super(1, c, c.times(c));
+
 		weight = new VectorDoubleWritable();
 		center = c;
-		size = 1;
 	}
 
 	public void addPoint(VectorDoubleWritable point)
@@ -67,14 +58,9 @@ public class CanopyCluster extends Cluster {
 			}
 			System.out.println(s1.size());
 			System.out.println(s2.size());
-			
+
 		}
 		size++;
-	}
-
-	public double euclideanDistance(VectorDoubleWritable point)
-			throws IllegalStateException {
-		return point.euclideanDistance(this.center);
 	}
 
 	@Override
@@ -88,17 +74,6 @@ public class CanopyCluster extends Cluster {
 	public void write(DataOutput out) throws IOException {
 		super.write(out);
 		center.write(out);
-	}
-
-	public VectorDoubleWritable getCentroid() {
-		VectorDoubleWritable centroid = (VectorDoubleWritable) s1.clone();
-		ListIterator<Double> ite = centroid.get().listIterator();
-		double data = 0;
-		while (ite.hasNext()) {
-			data = ite.next();
-			ite.set(data / size);
-		}
-		return centroid;
 	}
 
 	public VectorDoubleWritable getCenter() {

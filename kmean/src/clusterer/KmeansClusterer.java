@@ -10,7 +10,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.util.ReflectionUtils;
 
@@ -20,7 +20,7 @@ import distanceMeasure.EuclideanDistance;
 
 public class KmeansClusterer {
 	protected ArrayList<KmeansCluster> clusters = new ArrayList<KmeansCluster>();
-	protected HashMap<Integer, KmeansCluster> clusterMap = new HashMap<Integer, KmeansCluster>();
+	protected HashMap<Long, KmeansCluster> clusterMap = new HashMap<Long, KmeansCluster>();
 	protected DistanceMeasure dm;
 
 	public KmeansClusterer() {
@@ -41,13 +41,15 @@ public class KmeansClusterer {
 		SequenceFile.Reader reader = null;
 
 		reader = new SequenceFile.Reader(fs, path, conf);
-		IntWritable key = (IntWritable) ReflectionUtils.newInstance(
+		LongWritable key = (LongWritable) ReflectionUtils.newInstance(
 				reader.getKeyClass(), conf);
 		KmeansCluster value = (KmeansCluster) ReflectionUtils.newInstance(
 				reader.getValueClass(), conf);
 
 		while (reader.next(key, value)) {
 			clusters.add(value);
+			clusterMap.put(new Long(value.getId()), value);
+			value = new KmeansCluster();
 		}
 		IOUtils.closeStream(reader);
 	}
@@ -57,6 +59,7 @@ public class KmeansClusterer {
 		KmeansCluster nearest = null;
 		double mindist = Double.MAX_VALUE;
 		double tempdist = 0;
+
 		for (KmeansCluster cluster : clusters) {
 			tempdist = cluster.euclideanDistance(point);
 			if (tempdist < mindist) {
@@ -68,7 +71,7 @@ public class KmeansClusterer {
 	}
 
 	public boolean isConverged(KmeansCluster cluster, double threshold) {
-		KmeansCluster last = clusterMap.get(cluster.getId());
+		KmeansCluster last = clusterMap.get(new Long(cluster.getId()));
 		return dm.distance(cluster.getCentroid(), last.getCentroid()) < threshold;
 	}
 

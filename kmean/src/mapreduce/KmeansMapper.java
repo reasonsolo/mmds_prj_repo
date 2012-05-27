@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -16,24 +16,24 @@ import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 
 public class KmeansMapper extends
-		Mapper<IntWritable, Text, IntWritable, VectorDoubleWritable> {
-	private VectorDoubleWritable point = null;
+		Mapper<LongWritable, Text, LongWritable, KmeansCluster> {
+	protected VectorDoubleWritable point = null;
 	protected KmeansClusterer clusterer = new KmeansClusterer();
 
 	@Override
-	public void map(IntWritable key, Text values, Context context)
+	public void map(LongWritable key, Text values, Context context)
 			throws IOException {
 		point = new VectorDoubleWritable(values);
 
 		KmeansCluster cluster = null;
 		try {
 			cluster = clusterer.findNearestCluster(point);
-			context.write(new IntWritable(cluster.getId()), point);
+			context.write(new LongWritable(cluster.getId()), new KmeansCluster(
+					cluster.getId(), point, point.times(point)));
 		} catch (IllegalStateException e) {
 			System.err.println("Error:\t" + e.getMessage() + " at row(" + key
 					+ ")");
 		} catch (InterruptedException e) {
-			// TODO
 			e.printStackTrace();
 		}
 	}

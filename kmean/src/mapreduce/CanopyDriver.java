@@ -2,14 +2,12 @@ package mapreduce;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import utils.VectorDoubleWritable;
-import clusterer.CanopyCluster;
-
 import config.Constants;
 
 public class CanopyDriver {
@@ -47,7 +45,7 @@ public class CanopyDriver {
 			job.setInputFormatClass(TextInputFormat.class);
 			job.setOutputFormatClass(TextOutputFormat.class);
 
-			job.setOutputKeyClass(IntWritable.class);
+			job.setOutputKeyClass(LongWritable.class);
 			job.setOutputValueClass(VectorDoubleWritable.class);
 
 			job.waitForCompletion(true);

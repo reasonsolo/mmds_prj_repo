@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.junit.Before;
@@ -27,11 +27,11 @@ import clusterer.KmeansClusterer;
 
 public class ClustererTest {
 	KmeansClusterer clusterer = new KmeansClusterer();
-	KmeansCluster clusters[] = new KmeansCluster[5];
 	VectorDoubleWritable vec[] = new VectorDoubleWritable[20];
 
 	@Before
 	public void setUp() {
+		KmeansCluster clusters[] = new KmeansCluster[5];
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(
 					"dataset/testdata/cluster/testcluster"));
@@ -49,14 +49,15 @@ public class ClustererTest {
 
 			SequenceFile.Writer writer = null;
 
-			writer = new SequenceFile.Writer(fs, conf, path, IntWritable.class,
-					KmeansCluster.class);
+			writer = new SequenceFile.Writer(fs, conf, path,
+					LongWritable.class, KmeansCluster.class);
 
 			for (int i = 0; i < 3; i++) {
 				clusters[i] = new KmeansCluster(i);
 				clusters[i].addPoint(vec[i]);
 
-				writer.append(new IntWritable(i), clusters[i]);
+				System.out.println(clusters[i].getCentroid());
+				writer.append(new LongWritable(i), clusters[i]);
 			}
 
 			writer.syncFs();
@@ -83,6 +84,7 @@ public class ClustererTest {
 
 		for (KmeansCluster cluster : clusters) {
 			assertTrue(clusterer.getClusters().contains(cluster));
+			assertEquals(cluster.getCentroid().size(), 2);
 		}
 
 		assertEquals(clusters.size(), 3);

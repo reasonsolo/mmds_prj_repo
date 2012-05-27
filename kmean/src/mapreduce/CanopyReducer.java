@@ -3,7 +3,7 @@ package mapreduce;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -13,7 +13,7 @@ import clusterer.CanopyClusterer;
 import utils.VectorDoubleWritable;
 
 public class CanopyReducer extends
-		Reducer<IntWritable, VectorDoubleWritable, Text, CanopyCluster> {
+		Reducer<LongWritable, VectorDoubleWritable, Text, CanopyCluster> {
 
 	private final ArrayList<CanopyCluster> canopies = new ArrayList<CanopyCluster>();
 
@@ -24,7 +24,7 @@ public class CanopyReducer extends
 	}
 
 	@Override
-	public void reduce(IntWritable key, Iterable<VectorDoubleWritable> values,
+	public void reduce(LongWritable key, Iterable<VectorDoubleWritable> values,
 			Context context) throws IOException, InterruptedException {
 
 		for (VectorDoubleWritable value : values) {
