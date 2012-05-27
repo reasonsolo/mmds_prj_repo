@@ -10,13 +10,12 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import canopy.Canopy;
 import config.Constants;
 
-
 public class CanopyDriver {
 	public static void configure() {
 
 	}
 
-	public static void main(String[] args){
+	public static void main(String[] args) {
 
 		if (args.length < 4) {
 			System.out.println("Usage: program <t1> <t2> <input> <output>");
@@ -31,27 +30,25 @@ public class CanopyDriver {
 		Path in = new Path(args[2]);
 		Path out = new Path(args[3]);
 
-
 		try {
 
-				Job job = new Job(conf);
-				job.setNumReduceTasks(2);
-				job.setJobName("Canopy clustering");
+			Job job = new Job(conf);
+			job.setNumReduceTasks(2);
+			job.setJobName("Canopy clustering");
 
-				job.setMapperClass(CanopyMapper.class);
-				job.setReducerClass(CanopyReducer.class);
-				job.setJarByClass(CanopyDriver.class);
+			job.setMapperClass(CanopyMapper.class);
+			job.setReducerClass(CanopyReducer.class);
+			job.setJarByClass(CanopyDriver.class);
 
-				TextInputFormat.addInputPath(job, in);
-				TextOutputFormat.setOutputPath(job, out);
-				job.setInputFormatClass(TextInputFormat.class);
-				job.setOutputFormatClass(TextOutputFormat.class);
+			TextInputFormat.addInputPath(job, in);
+			TextOutputFormat.setOutputPath(job, out);
+			job.setInputFormatClass(TextInputFormat.class);
+			job.setOutputFormatClass(TextOutputFormat.class);
 
-				job.setOutputKeyClass(IntWritable.class);
-				job.setOutputValueClass(Canopy.class);
+			job.setOutputKeyClass(IntWritable.class);
+			job.setOutputValueClass(Canopy.class);
 
-				job.waitForCompletion(true);
-
+			job.waitForCompletion(true);
 
 		} catch (Exception e) {
 			// TODO:
