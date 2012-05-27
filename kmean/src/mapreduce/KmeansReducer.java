@@ -32,11 +32,8 @@ public class KmeansReducer extends
 		if (clusterer.isConverged(cluster, threshold))
 			context.getCounter("Clusterer", "Converged Cluster").increment(1);
 		try {
-			// increase counter
-			// context.getCounter(UpdateCounter.UPDATED).increment(1);
 			context.write(key, cluster);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -70,5 +67,7 @@ public class KmeansReducer extends
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
+		context.getCounter(Constants.COUNTER_GROUP, Constants.COUNTER_TOTAL)
+				.setValue(this.clusterer.getClusters().size());
 	}
 }

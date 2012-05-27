@@ -8,9 +8,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
-import config.Constants;
-
 import clusterer.Cluster;
+import config.Constants;
 
 public class KmeansDriver {
 	public static void configure() {
@@ -23,10 +22,7 @@ public class KmeansDriver {
 			System.exit(0);
 		}
 
-		int NumberOfClusters = Integer.parseInt(args[3]);
-
 		Configuration conf = new Configuration();
-		conf.setNumReduceTasks(10);
 		Path in = new Path(args[1]);
 		Path out = new Path(args[2]);
 
@@ -36,6 +32,7 @@ public class KmeansDriver {
 
 			while (converge != total) {
 				Job job = new Job(conf);
+				job.setNumReduceTasks(2);
 				job.setJobName("K-means clustering");
 
 				job.setMapperClass(KmeansMapper.class);
@@ -43,7 +40,7 @@ public class KmeansDriver {
 				job.setJarByClass(KmeansDriver.class);
 
 				SequenceFileInputFormat.addInputPath(job, in);
-				SequenceFileOutputFormat.addOutputPath(job, out);
+				SequenceFileOutputFormat.setOutputPath(job, out);
 				job.setInputFormatClass(SequenceFileInputFormat.class);
 				job.setOutputFormatClass(SequenceFileOutputFormat.class);
 

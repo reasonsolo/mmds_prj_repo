@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import utils.VectorDoubleWritable;
@@ -20,17 +19,6 @@ public class KmeansMapper extends
 		Mapper<IntWritable, Text, IntWritable, VectorDoubleWritable> {
 	private VectorDoubleWritable point = null;
 	protected Clusterer clusterer = new Clusterer();
-
-	private void loadPart() {
-		// TODO
-		// a helper method, loads a single kmeans center part file
-	}
-
-	public void configure(JobConf conf) {
-		// TODO:
-		// This method should load all canopy centers and k-mean centers
-		// into memory, and get the mapper ready for iteration
-	}
 
 	@Override
 	public void map(IntWritable key, Text values, Context context)
@@ -75,5 +63,7 @@ public class KmeansMapper extends
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
+		context.getCounter(Constants.COUNTER_GROUP, Constants.COUNTER_TOTAL)
+				.setValue(this.clusterer.getClusters().size());
 	}
 }
