@@ -6,7 +6,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import utils.VectorDoubleWritable;
-import Canopy.Canopy;
+import canopy.Canopy;
 
 public class CanopyCombiner
 		extends

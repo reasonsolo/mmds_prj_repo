@@ -8,9 +8,10 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.Mapper;
 
+import canopy.Canopy;
+import canopy.CanopyClusterer;
+
 import utils.VectorDoubleWritable;
-import Canopy.Canopy;
-import Canopy.CanopyClusterer;
 
 public class CanopyMapper extends
 		Mapper<Text, VectorDoubleWritable, IntWritable, VectorDoubleWritable> {
@@ -44,10 +45,10 @@ public class CanopyMapper extends
 	@Override
 	protected void cleanup(Context context) throws IOException,
 			InterruptedException {
-		for (Canopy canopy : canopies) {
-			context.write(new Text("centroid"),
-					new VectorWritable(canopy.center()));
+		for (Canopy canopy : canopies) { 
+			context.write(new IntWritable(canopy.getId()),
+					canopy.getCentroid());
 		}
-		super.cleanup(contex);
+		super.cleanup(context);
 	}
 }

@@ -23,14 +23,14 @@ public class KmeansDriver {
 		}
 
 		Configuration conf = new Configuration();
-		Path in = new Path(args[1]);
-		Path out = new Path(args[2]);
 
 		Counter converge = null;
 		Counter total = null;
+		Path in;
+		Path out;
+		int iterCounter = 0;
 		try {
-
-			while (converge != total) {
+			while (iterCounter == 0 || converge != total) {
 				Job job = new Job(conf);
 				job.setNumReduceTasks(2);
 				job.setJobName("K-means clustering");
@@ -38,9 +38,16 @@ public class KmeansDriver {
 				job.setMapperClass(KmeansMapper.class);
 				job.setReducerClass(KmeansReducer.class);
 				job.setJarByClass(KmeansDriver.class);
-
+				
+				if (iterCounter == 0)
+					in = new Path(args[1]);
+				else
+					// load the output of last iteration
+					in = new Path(args[1] + ".part" + (iterCounter-1));
+				out = new Path(args[1] + ".part" + iterCounter);
 				SequenceFileInputFormat.addInputPath(job, in);
 				SequenceFileOutputFormat.setOutputPath(job, out);
+				
 				job.setInputFormatClass(SequenceFileInputFormat.class);
 				job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
@@ -53,6 +60,7 @@ public class KmeansDriver {
 						.findCounter(Constants.COUNTER_CONVERGED);
 				total = job.getCounters().getGroup(Constants.COUNTER_GROUP)
 						.findCounter(Constants.COUNTER_TOTAL);
+				iterCounter++;
 			}
 
 		} catch (Exception e) {
