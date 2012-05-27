@@ -87,7 +87,7 @@ public class Cluster implements Writable {
 	@Override
 	public void write(DataOutput out) throws IOException {
 		out.writeInt(id);
-		out.writeDouble(size);
+		out.writeInt(size);
 		s1.write(out);
 		s2.write(out);
 	}

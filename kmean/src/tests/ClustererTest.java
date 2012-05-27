@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -56,7 +57,6 @@ public class ClustererTest {
 				clusters[i].addPoint(vec[i]);
 
 				writer.append(new IntWritable(i), clusters[i]);
-				System.out.println(clusters[i].getCentroid());
 			}
 
 			writer.syncFs();
@@ -82,7 +82,7 @@ public class ClustererTest {
 		clusterer.loadClusters(clusterPath, conf);
 
 		for (Cluster cluster : clusters) {
-			System.out.println(cluster.getCentroid());
+			assertTrue(clusterer.getClusters().contains(cluster));
 		}
 
 		assertEquals(clusters.size(), 3);

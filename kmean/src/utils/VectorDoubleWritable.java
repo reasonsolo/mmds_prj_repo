@@ -205,7 +205,7 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 				vec.add(in.readDouble());
 			}
 		} catch (EOFException e) {
-
+			e.printStackTrace();
 		}
 	}
 
