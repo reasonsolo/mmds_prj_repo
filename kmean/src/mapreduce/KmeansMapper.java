@@ -45,9 +45,8 @@ public class KmeansMapper extends
 		DistanceMeasure dm = null;
 		try {
 			dm = (DistanceMeasure) Class.forName(
-					"distanceMeasure."
-							+ conf.get(Constants.DISTANCE_MEASURE,
-									"EuclideanDistance")).newInstance();
+					"distanceMeasure." + conf.get(Constants.DISTANCE_MEASURE,
+					"EuclideanDistance")).newInstance();
 		} catch (InstantiationException | IllegalAccessException
 				| ClassNotFoundException e) {
 			dm = new EuclideanDistance();
