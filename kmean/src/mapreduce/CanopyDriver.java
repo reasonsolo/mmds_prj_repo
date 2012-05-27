@@ -52,11 +52,13 @@ public class CanopyDriver {
 				job.setOutputValueClass(Canopy.class);
 
 				job.waitForCompletion(true);
+				
+				//TODO set the converge value
 
-				converge = job.getCounters().getGroup(Constants.COUNTER_GROUP)
+				/*converge = job.getCounters().getGroup(Constants.COUNTER_GROUP)
 						.findCounter(Constants.COUNTER_CONVERGED);
 				total = job.getCounters().getGroup(Constants.COUNTER_GROUP)
-						.findCounter(Constants.COUNTER_TOTAL);
+						.findCounter(Constants.COUNTER_TOTAL);*/
 			}
 
 		} catch (Exception e) {
