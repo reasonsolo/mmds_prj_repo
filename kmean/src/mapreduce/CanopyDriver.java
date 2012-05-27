@@ -5,8 +5,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
@@ -46,10 +46,10 @@ public class CanopyDriver {
 				job.setReducerClass(CanopyReducer.class);
 				job.setJarByClass(CanopyDriver.class);
 
-				FileInputFormat.addInputPath(job, in);
-				FileOutputFormat.setOutputPath(job, out);
-				job.setInputFormatClass(FileInputFormat.class);
-				job.setOutputFormatClass(FileOutputFormat.class);
+				TextInputFormat.addInputPath(job, in);
+				TextOutputFormat.setOutputPath(job, out);
+				job.setInputFormatClass(TextInputFormat.class);
+				job.setOutputFormatClass(TextOutputFormat.class);
 
 				job.setOutputKeyClass(IntWritable.class);
 				job.setOutputValueClass(Canopy.class);

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -14,7 +15,7 @@ import canopy.CanopyClusterer;
 import utils.VectorDoubleWritable;
 
 public class CanopyMapper extends
-		Mapper<Text, Text, IntWritable, VectorDoubleWritable> {
+		Mapper<LongWritable, Text, IntWritable, VectorDoubleWritable> {
 	private VectorDoubleWritable point = null;
 	protected CanopyClusterer canopyClusterer = new CanopyClusterer();
 	private ArrayList<Canopy> canopies = new ArrayList<Canopy>();
@@ -22,7 +23,7 @@ public class CanopyMapper extends
 	
 
 	@Override
-	protected void map(Text key, Text values, Context context)
+	protected void map(LongWritable key, Text values, Context context)
 			throws IOException, InterruptedException {
 		point = new VectorDoubleWritable(values);
 		canopyClusterer.addPointToCanopies(point, canopies);
