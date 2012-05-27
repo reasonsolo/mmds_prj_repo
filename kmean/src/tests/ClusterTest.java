@@ -57,6 +57,30 @@ public class ClusterTest {
 
 	@Test
 	public void testOmitCluster() {
-		
+		Cluster c1 = new Cluster(), c2 = new Cluster();
+		assertEquals(c1.getSize(), 0);
+
+		int i = 0;
+		for (VectorDoubleWritable v : vec) {
+
+			i++;
+			if (i % 2 == 1)
+				c1.addPoint(v);
+			if (i % 2 == 0)
+				c2.addPoint(v);
+			assertEquals(c1.getSize(), (i + 1) / 2);
+			assertEquals(c2.getSize(), i / 2);
+		}
+
+		c1.omitCluster(c2);
+
+		assertTrue(c1.getCentroid().equals(vec[1].times(4.5)));
+		assertTrue(c1.getS1().equals(vec[9].times(5)));
+		assertTrue(c1.getS2().equals(vec[1].times(285)));
+		assertFalse(c1.getS2().equals(vec[1].times(287)));
+		assertEquals(c1.getSize(), 10);
+
+		assertTrue(Math.abs(c1.euclideanDistance(vec[1])
+				- c1.getCentroid().euclideanDistance(vec[1])) < 0.000000001);
 	}
 }

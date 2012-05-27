@@ -1,4 +1,4 @@
-package mapreduce;
+/*package mapreduce;
 
 import java.io.IOException;
 
@@ -26,3 +26,4 @@ public class CanopyCombiner
 		}
 	}
 }
+*/
