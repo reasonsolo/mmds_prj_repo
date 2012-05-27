@@ -18,7 +18,14 @@ public class Cluster implements Writable {
 	public Cluster() {
 		s1 = new VectorDoubleWritable();
 		s2 = new VectorDoubleWritable();
-		id = 0;
+		this.id = 0;
+		size = 0;
+	}
+
+	public Cluster(int id) {
+		s1 = new VectorDoubleWritable();
+		s2 = new VectorDoubleWritable();
+		this.id = id;
 		size = 0;
 	}
 
