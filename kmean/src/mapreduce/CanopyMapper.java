@@ -14,23 +14,17 @@ import canopy.CanopyClusterer;
 import utils.VectorDoubleWritable;
 
 public class CanopyMapper extends
-		Mapper<Text, VectorDoubleWritable, IntWritable, VectorDoubleWritable> {
+		Mapper<Text, Text, IntWritable, VectorDoubleWritable> {
 	private VectorDoubleWritable point = null;
 	protected CanopyClusterer canopyClusterer = new CanopyClusterer();
 	private ArrayList<Canopy> canopies = new ArrayList<Canopy>();
 
-	private void loadPart() {
-		// TODO
-		// 
-	}
-
-	public void configure(JobConf conf) {
-		// TODO:
-	}
+	
 
 	@Override
-	protected void map(Text key, VectorDoubleWritable point, Context context)
+	protected void map(Text key, Text values, Context context)
 			throws IOException, InterruptedException {
+		point = new VectorDoubleWritable(values);
 		canopyClusterer.addPointToCanopies(point, canopies);
 
 	}
