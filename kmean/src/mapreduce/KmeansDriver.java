@@ -1,5 +1,7 @@
 package mapreduce;
 
+import java.util.Date;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -18,6 +20,8 @@ public class KmeansDriver {
 	}
 
 	public static void main(String[] args) {
+		Date start = new Date();
+
 		if (args.length < 2) {
 			System.out.println("Usage: program <input> <clusters>");
 			System.exit(0);
@@ -32,7 +36,7 @@ public class KmeansDriver {
 		int iterCounter = 0;
 		conf.setFloat(Constants.THRESHOLD, 5.0f);
 		try {
-			while (iterCounter == 0 || converge != total) {
+			do {
 				if (iterCounter == 0)
 					conf.set(Constants.CLUSTER_PATH, args[1]);
 				else
@@ -66,14 +70,19 @@ public class KmeansDriver {
 						.findCounter(Constants.COUNTER_CONVERGED);
 				total = job.getCounters().getGroup(Constants.COUNTER_GROUP)
 						.findCounter(Constants.COUNTER_TOTAL);
+				System.out.println("CONVERGED:\t" + converge.getValue() + "\t"
+						+ total.getValue());
 				iterCounter++;
-			}
+			} while (converge.getValue() < total.getValue());
 
 		} catch (Exception e) {
 			// TODO:
 			// a better error report routine
 			e.printStackTrace();
 		}
-
+		Date finish = new Date();
+		System.out.println("All clusters converged. k-means finishs.");
+		System.out.println("It takes " + (finish.getTime() - start.getTime())
+				/ 1000.0 + "s to accomplish clustering.");
 	}
 }

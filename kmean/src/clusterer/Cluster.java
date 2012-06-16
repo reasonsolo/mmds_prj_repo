@@ -72,12 +72,21 @@ public abstract class Cluster implements Writable, Cloneable {
 	}
 
 	public void omitCluster(KmeansCluster omitee) {
-		s1 = s1.plus(omitee.getS1());
-		System.out.println("DEBUG:\t" + s1.get().toString());
-		s2 = s2.plus(omitee.getS2());
-		System.out.println("DEBUG:\t" + s2.get().toString());
-		size += omitee.getSize();
-		System.out.println("DEBUG:\t" + size);
+		if (size == 0) {
+			s1 = (VectorDoubleWritable) omitee.getS1().clone();
+			s2 = (VectorDoubleWritable) omitee.getS2().clone();
+			size += omitee.getSize();
+		} else {
+			s1 = s1.plus(omitee.getS1());
+			s2 = s2.plus(omitee.getS2());
+			size += omitee.getSize();
+		}
+		/*
+		 * System.out.println("Omit_S1:\t" + omitee.getS1().get().toString());
+		 * System.out.println("Omit_S2:\t" + omitee.getS2().get().toString());
+		 * System.out.println("S1:\t\t" + s1.get().toString());
+		 * System.out.println("S2:\t\t" + s2.get().toString());
+		 */
 	}
 
 	@Override

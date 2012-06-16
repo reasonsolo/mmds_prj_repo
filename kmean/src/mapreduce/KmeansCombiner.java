@@ -13,8 +13,12 @@ public class KmeansCombiner extends
 	public void reduce(LongWritable key, Iterable<KmeansCluster> values,
 			Context context) throws IOException {
 		KmeansCluster cluster = new KmeansCluster((int) key.get());
+		
 		System.out.println("Combiner cluster:\t" + cluster.getId());
+		
 		for (KmeansCluster value : values) {
+			
+			//DEBUG info
 			System.out.println("Combiner Values " + value.getId() + ":\t"
 					+ value.getSize() + "\t" + value.getS1().size() + "\t"
 					+ value.getS1().get());

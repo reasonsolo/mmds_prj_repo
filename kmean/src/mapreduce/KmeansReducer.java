@@ -31,9 +31,11 @@ public class KmeansReducer extends
 					+ value.getCentroid().get().toString());
 			cluster.omitCluster(value);
 		}
+		System.out.println("Cluster:\t" + cluster.getCentroid().get());
 
 		if (clusterer.isConverged(cluster, threshold))
-			context.getCounter("Clusterer", "Converged Cluster").increment(1);
+			context.getCounter(Constants.COUNTER_GROUP,
+					Constants.COUNTER_CONVERGED).increment(1);
 		try {
 			System.out.println("Context:\t" + key + "\t"
 					+ cluster.getCentroid());
@@ -41,6 +43,9 @@ public class KmeansReducer extends
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Converaged cluster:\t"
+				+ context.getCounter(Constants.COUNTER_GROUP,
+						Constants.COUNTER_CONVERGED).getValue());
 	}
 
 	@Override
@@ -77,13 +82,12 @@ public class KmeansReducer extends
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
-		context.getCounter(Constants.COUNTER_GROUP, Constants.COUNTER_TOTAL)
-				.setValue(this.clusterer.getClusters().size());
 
 		/*
-		 * for (Cluster clu : clusterer.getClusters()) {
-		 * System.out.println("Cluster " + clu.getId() + ":\t" +
-		 * clu.getCentroid()); }
+		 * for (KmeansCluster clu : clusterer.getClusters()) {
+		 * System.out.println("Cluster " + clu.getId() + "/" +
+		 * this.clusterer.getClusters().size() + ":\t" + clu.getCentroid()); }
 		 */
+
 	}
 }
