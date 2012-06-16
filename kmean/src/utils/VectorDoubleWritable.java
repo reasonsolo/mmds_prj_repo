@@ -38,6 +38,10 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		return vec;
 	}
 
+	public void set(ArrayList<Double> vec) {
+		this.vec = vec;
+	}
+
 	public int size() {
 		return vec.size();
 	}
@@ -201,6 +205,13 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 	@Override
 	public void readFields(DataInput in) throws IOException {
 		try {
+			/**
+			 * IMPORTANT Vector should be cleared before read. Otherwise we will
+			 * get duplicated elements. This error waste me one day to
+			 * debug!!!!!
+			 */
+			vec.clear();
+
 			int size = in.readInt();
 			for (int i = 0; i < size; i++) {
 				vec.add(in.readDouble());
@@ -213,8 +224,8 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 	@Override
 	public void write(DataOutput out) throws IOException {
 		out.writeInt(vec.size());
-		for (Double data : vec) {
-			out.writeDouble(data);
+		for (int i = 0; i < vec.size(); i++) {
+			out.writeDouble(vec.get(i));
 		}
 	}
 

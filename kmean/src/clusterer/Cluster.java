@@ -73,8 +73,11 @@ public abstract class Cluster implements Writable, Cloneable {
 
 	public void omitCluster(KmeansCluster omitee) {
 		s1 = s1.plus(omitee.getS1());
+		System.out.println("DEBUG:\t" + s1.get().toString());
 		s2 = s2.plus(omitee.getS2());
+		System.out.println("DEBUG:\t" + s2.get().toString());
 		size += omitee.getSize();
+		System.out.println("DEBUG:\t" + size);
 	}
 
 	@Override
@@ -136,11 +139,15 @@ public abstract class Cluster implements Writable, Cloneable {
 	}
 
 	public VectorDoubleWritable getCentroid() {
+		if (this.size <= 1)
+			return s1;
 		return s1.divides(this.size);
 	}
 
 	public double variance() {
 		double s1avg = s1.sum() / size;
+		if (this.size == 0)
+			return 0;
 		return s2.sum() / size - s1avg * s1avg;
 	}
 

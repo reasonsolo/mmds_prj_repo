@@ -19,6 +19,9 @@ public class KmeansMapper extends
 		Mapper<LongWritable, Text, LongWritable, KmeansCluster> {
 	protected VectorDoubleWritable point = null;
 	protected KmeansClusterer clusterer = new KmeansClusterer();
+	protected LongWritable id = new LongWritable(0);
+
+	int i = 0;
 
 	@Override
 	public void map(LongWritable key, Text values, Context context)
@@ -29,16 +32,17 @@ public class KmeansMapper extends
 		try {
 			cluster = clusterer.findNearestCluster(point);
 
-			System.out.println(cluster.getId() + "\t" + point.get().toString()
-					+ "\t" + cluster.getCentroid().get().toString());
-
 			KmeansCluster value = new KmeansCluster(cluster.getId(), point,
 					point.times(point));
 
-			System.out.println("New cluster:\t" + value.getId() + "\t"
-					+ value.getCentroid().get().toString() + "\t"
-					+ value.getS1().get().toString());
-			context.write(new LongWritable(cluster.getId()), value);
+			/*
+			 * System.out.println(value.getId() + "\t" +
+			 * value.getCentroid().get().toString() + "\t" + value.getS1().get()
+			 * + "\t" + value.getS2().get());
+			 */
+
+			id.set(cluster.getId());
+			context.write(id, value);
 		} catch (IllegalStateException e) {
 			System.err.println("Error:\t" + e.getMessage() + " at row(" + key
 					+ ")");

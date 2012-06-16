@@ -1,5 +1,6 @@
 package tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -69,6 +70,13 @@ public class UtilsTest {
 
 		v3 = v1.plus(4);
 		assertTrue(v3.equals(vec[5]));
+
+		assertEquals(v3.size(), vec[1].size());
+		assertEquals(v3.size(), 10);
+
+		v3 = v1.plus(2);
+		assertTrue(v3.equals(vec[3]));
+		assertEquals(v3.size(), 10);
 	}
 
 	@Test

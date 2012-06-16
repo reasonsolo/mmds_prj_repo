@@ -41,7 +41,7 @@ public class KmeansDriver {
 							+ (iterCounter - 1) + "/part-r-00000");
 
 				Job job = new Job(conf);
-				job.setNumReduceTasks(2);
+				job.setNumReduceTasks(1);
 				job.setJobName("K-means clustering");
 				job.setJarByClass(KmeansDriver.class);
 				job.setMapperClass(KmeansMapper.class);
