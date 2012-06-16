@@ -48,8 +48,13 @@ public class KmeansClusterMapper extends
 					"distanceMeasure."
 							+ conf.get(Constants.DISTANCE_MEASURE,
 									"EuclideanDistance")).newInstance();
-		} catch (InstantiationException | IllegalAccessException
-				| ClassNotFoundException e) {
+		} catch (InstantiationException e) {
+			dm = new EuclideanDistance();
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			dm = new EuclideanDistance();
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			dm = new EuclideanDistance();
 			e.printStackTrace();
 		}

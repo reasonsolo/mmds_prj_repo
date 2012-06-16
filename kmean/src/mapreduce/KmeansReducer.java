@@ -25,13 +25,18 @@ public class KmeansReducer extends
 	public void reduce(LongWritable key, Iterable<KmeansCluster> values,
 			Context context) throws IOException {
 		KmeansCluster cluster = clusterMap.get(key.get());
+		System.out.println("Reducer cluster:\t" + cluster.getId());
 		for (KmeansCluster value : values) {
+			System.out.println("Values:\t" + key + "\t"
+					+ value.getCentroid().get().toString());
 			cluster.omitCluster(value);
 		}
 
 		if (clusterer.isConverged(cluster, threshold))
 			context.getCounter("Clusterer", "Converged Cluster").increment(1);
 		try {
+			System.out.println("Context:\t" + key + "\t"
+					+ cluster.getCentroid());
 			context.write(key, cluster);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -42,15 +47,20 @@ public class KmeansReducer extends
 	public void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
-		threshold = conf.getFloat(Constants.THRESHOLD, 1);
+		threshold = conf.getFloat(Constants.THRESHOLD, 5.0f);
 		DistanceMeasure dm = null;
 		try {
 			dm = (DistanceMeasure) Class.forName(
 					"distanceMeasure."
 							+ conf.get(Constants.DISTANCE_MEASURE,
 									"EuclideanDistance")).newInstance();
-		} catch (InstantiationException | IllegalAccessException
-				| ClassNotFoundException e) {
+		} catch (InstantiationException e) {
+			dm = new EuclideanDistance();
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			dm = new EuclideanDistance();
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			dm = new EuclideanDistance();
 			e.printStackTrace();
 		}
@@ -69,5 +79,11 @@ public class KmeansReducer extends
 			}
 		context.getCounter(Constants.COUNTER_GROUP, Constants.COUNTER_TOTAL)
 				.setValue(this.clusterer.getClusters().size());
+
+		/*
+		 * for (Cluster clu : clusterer.getClusters()) {
+		 * System.out.println("Cluster " + clu.getId() + ":\t" +
+		 * clu.getCentroid()); }
+		 */
 	}
 }

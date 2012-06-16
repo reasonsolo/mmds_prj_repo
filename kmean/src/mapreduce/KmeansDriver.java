@@ -6,6 +6,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
 import clusterer.KmeansCluster;
@@ -37,7 +38,7 @@ public class KmeansDriver {
 				else
 					// load the output of last iteration
 					conf.set(Constants.CLUSTER_PATH, args[1] + ".part"
-							+ (iterCounter - 1));
+							+ (iterCounter - 1) + "/part-r-00000");
 
 				Job job = new Job(conf);
 				job.setNumReduceTasks(2);
@@ -52,14 +53,12 @@ public class KmeansDriver {
 				job.setMapOutputKeyClass(LongWritable.class);
 				job.setMapOutputValueClass(KmeansCluster.class);
 
+				job.setInputFormatClass(TextInputFormat.class);
+				job.setOutputFormatClass(SequenceFileOutputFormat.class);
+
 				out = new Path(args[1] + ".part" + iterCounter);
 				FileInputFormat.addInputPath(job, in);
 				SequenceFileOutputFormat.setOutputPath(job, out);
-
-				/*
-				 * job.setInputFormatClass(FileInputFormat.class);
-				 * job.setOutputFormatClass(SequenceFileOutputFormat.class);
-				 */
 
 				job.waitForCompletion(true);
 

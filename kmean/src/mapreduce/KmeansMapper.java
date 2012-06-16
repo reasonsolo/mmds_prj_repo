@@ -28,8 +28,17 @@ public class KmeansMapper extends
 		KmeansCluster cluster = null;
 		try {
 			cluster = clusterer.findNearestCluster(point);
-			context.write(new LongWritable(cluster.getId()), new KmeansCluster(
-					cluster.getId(), point, point.times(point)));
+
+			System.out.println(cluster.getId() + "\t" + point.get().toString()
+					+ "\t" + cluster.getCentroid().get().toString());
+
+			KmeansCluster value = new KmeansCluster(cluster.getId(), point,
+					point.times(point));
+
+			System.out.println("New cluster:\t" + value.getId() + "\t"
+					+ value.getCentroid().get().toString() + "\t"
+					+ value.getS1().get().toString());
+			context.write(new LongWritable(cluster.getId()), value);
 		} catch (IllegalStateException e) {
 			System.err.println("Error:\t" + e.getMessage() + " at row(" + key
 					+ ")");
@@ -48,8 +57,13 @@ public class KmeansMapper extends
 					"distanceMeasure."
 							+ conf.get(Constants.DISTANCE_MEASURE,
 									"EuclideanDistance")).newInstance();
-		} catch (InstantiationException | IllegalAccessException
-				| ClassNotFoundException e) {
+		} catch (InstantiationException e) {
+			dm = new EuclideanDistance();
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			dm = new EuclideanDistance();
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			dm = new EuclideanDistance();
 			e.printStackTrace();
 		}

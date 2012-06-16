@@ -51,6 +51,7 @@ public class KmeansClusterer {
 			clusterMap.put(new Long(value.getId()), value);
 			value = new KmeansCluster();
 		}
+
 		IOUtils.closeStream(reader);
 	}
 
@@ -61,7 +62,7 @@ public class KmeansClusterer {
 		double tempdist = 0;
 
 		for (KmeansCluster cluster : clusters) {
-			tempdist = cluster.euclideanDistance(point);
+			tempdist = dm.distance(cluster.getCentroid(), point);
 			if (tempdist < mindist) {
 				mindist = tempdist;
 				nearest = cluster;

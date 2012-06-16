@@ -56,7 +56,8 @@ public class ClustererTest {
 				clusters[i] = new KmeansCluster(i);
 				clusters[i].addPoint(vec[i]);
 
-				System.out.println(clusters[i].getCentroid());
+				System.out.println(clusters[i].getId() + "\t"
+						+ clusters[i].getCentroid());
 				writer.append(new LongWritable(i), clusters[i]);
 			}
 
@@ -82,9 +83,12 @@ public class ClustererTest {
 
 		clusterer.loadClusters(clusterPath, conf);
 
+		int i = 0;
 		for (KmeansCluster cluster : clusters) {
+			assertTrue(cluster.getId() == i);
 			assertTrue(clusterer.getClusters().contains(cluster));
 			assertEquals(cluster.getCentroid().size(), 2);
+			i++;
 		}
 
 		assertEquals(clusters.size(), 3);
