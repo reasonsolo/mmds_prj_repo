@@ -20,7 +20,8 @@ import distanceMeasure.EuclideanDistance;
 
 public class CanopyClusterer {
 	protected ArrayList<CanopyCluster> canopies = new ArrayList<CanopyCluster>();
-	protected HashMap<Integer, CanopyCluster> clusterMap = new HashMap<Integer, CanopyCluster>();
+	protected HashMap<Integer, CanopyCluster> clusterMap = 
+				new HashMap<Integer, CanopyCluster>();
 	protected DistanceMeasure dm;
 	protected double t1;
 	protected double t2;
@@ -51,8 +52,8 @@ public class CanopyClusterer {
 	}
 
 	public void loadClusters(String clusterPath, Configuration conf) // need to
-																		// be
-																		// checked
+																	 // be
+																	 // checked
 			throws IOException, URISyntaxException {
 		Path path = new Path(clusterPath);
 		FileSystem fs = FileSystem.get(new URI(clusterPath), conf);
@@ -79,7 +80,7 @@ public class CanopyClusterer {
 		double tempdist = 0;
 		for (CanopyCluster cluster : canopies) {
 			tempdist = cluster.euclideanDistance(point);
-			if (tempdist < mindist) {
+				if (tempdist < mindist) {
 				mindist = tempdist;
 				nearest = cluster;
 			}

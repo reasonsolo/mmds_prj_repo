@@ -28,8 +28,9 @@ public class CanopyReducer extends
 			Context context) throws IOException, InterruptedException {
 
 		for (VectorDoubleWritable value : values) {
+			System.out.println("1\n");
+			value.print();
 			canopyClusterer.addPointToCanopies(value, canopies);
-
 		}
 
 		for (CanopyCluster canopy : canopies) {

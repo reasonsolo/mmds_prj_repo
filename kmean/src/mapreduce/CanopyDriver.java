@@ -3,16 +3,18 @@ package mapreduce;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import clusterer.CanopyCluster;
 import vector.VectorDoubleWritable;
 import config.Constants;
 
 public class CanopyDriver {
 	public static void configure() {
-
+		// intentionally left blank?
 	}
 
 	public static void main(String[] args) {
@@ -31,22 +33,25 @@ public class CanopyDriver {
 		Path out = new Path(args[3]);
 
 		try {
-
 			Job job = new Job(conf);
-			job.setNumReduceTasks(2);
+			job.setNumReduceTasks(Constants.CANOPY_REDUCER_NUMBER);
 			job.setJobName("Canopy clustering");
 
-			job.setMapperClass(CanopyMapper.class);
-			job.setReducerClass(CanopyReducer.class);
 			job.setJarByClass(CanopyDriver.class);
-
+			// general configuration
 			TextInputFormat.addInputPath(job, in);
 			TextOutputFormat.setOutputPath(job, out);
 			job.setInputFormatClass(TextInputFormat.class);
 			job.setOutputFormatClass(TextOutputFormat.class);
-
-			job.setOutputKeyClass(LongWritable.class);
-			job.setOutputValueClass(VectorDoubleWritable.class);
+			
+			// configure mapper
+			job.setMapperClass(CanopyMapper.class);
+			job.setMapOutputKeyClass(LongWritable.class);
+			job.setMapOutputValueClass(VectorDoubleWritable.class);
+			// configure reducer
+			job.setReducerClass(CanopyReducer.class);
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(CanopyCluster.class);
 
 			job.waitForCompletion(true);
 

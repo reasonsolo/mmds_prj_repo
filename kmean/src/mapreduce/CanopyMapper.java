@@ -23,7 +23,7 @@ public class CanopyMapper extends
 	@Override
 	protected void map(LongWritable key, Text values, Context context)
 			throws IOException, InterruptedException {
-		System.out.println(values.toString());
+		//System.out.println(values.toString());
 		point = new VectorDoubleWritable(values);
 		canopyClusterer.addPointToCanopies(point, canopies);
 

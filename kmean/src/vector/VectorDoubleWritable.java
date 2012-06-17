@@ -18,7 +18,13 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 	public VectorDoubleWritable() {
 		vec.clear();
 	}
-
+	public void print() {
+		for (double element: vec) {
+			System.out.print(element);
+			System.out.print(' ');
+		}
+		System.out.print('\n');
+	}
 	public VectorDoubleWritable(ArrayList<Double> array) {
 		vec.clear();
 		for (Double data : array) {
