@@ -18,4 +18,9 @@ public class KmeansCluster extends Cluster implements Writable, Cloneable {
 			VectorDoubleWritable s2) throws IllegalStateException {
 		super(id, s1, s2);
 	}
+
+	public KmeansCluster(int id, int size, VectorDoubleWritable s1,
+			VectorDoubleWritable s2) throws IllegalStateException {
+		super(id, size, s1, s2);
+	}
 }

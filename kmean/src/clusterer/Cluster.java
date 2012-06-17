@@ -40,6 +40,18 @@ public abstract class Cluster implements Writable, Cloneable {
 		this.id = id;
 	}
 
+	public Cluster(int id, int size, VectorDoubleWritable s1,
+			VectorDoubleWritable s2) throws IllegalStateException {
+		super();
+
+		if (s1.size() != s2.size())
+			throw new IllegalStateException("S1/S2 dimension mismatch!");
+		this.s1 = s1;
+		this.s2 = s2;
+		this.size = s1.size();
+		this.id = id;
+	}
+
 	public void addPoint(VectorDoubleWritable point)
 			throws IllegalStateException {
 		if (size == 0) {
