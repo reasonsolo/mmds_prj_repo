@@ -36,7 +36,7 @@ public class KmeansDriver {
 		Path in = new Path(args[0]);
 		Path out;
 		int iterCounter = 0;
-		conf.setFloat(Constants.THRESHOLD, 0.000000001f);
+		conf.setFloat(Constants.THRESHOLD, 0.00000000000001f);
 		try {
 			do {
 				if (iterCounter == 0)
@@ -86,9 +86,9 @@ public class KmeansDriver {
 			job.setMapperClass(KmeansClusterMapper.class);
 
 			job.setOutputKeyClass(Text.class);
-			job.setOutputValueClass(KmeansCluster.class);
+			job.setOutputValueClass(Text.class);
 			job.setMapOutputKeyClass(Text.class);
-			job.setMapOutputValueClass(KmeansCluster.class);
+			job.setMapOutputValueClass(Text.class);
 
 			out = new Path(args[1] + ".final");
 			FileInputFormat.addInputPath(job, in);

@@ -16,11 +16,11 @@ import config.Constants;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 
-public class KmeansClusterMapper extends
-		Mapper<LongWritable, Text, Text, KmeansCluster> {
+public class KmeansClusterMapper extends Mapper<LongWritable, Text, Text, Text> {
 	private VectorDoubleWritable point = null;
 	protected KmeansClusterer clusterer = new KmeansClusterer();
 	protected Text outkey = new Text();
+	protected Text outvalue = new Text();
 	protected long linenumber = 0;
 	protected int lastfilehash = 0;
 
@@ -44,7 +44,9 @@ public class KmeansClusterMapper extends
 			} else
 				linenumber++;
 			outkey.set(filename + "," + linenumber);
-			context.write(outkey, cluster);
+			outvalue.set(String.format("%s\t%s\t%s", cluster.getId(),
+					cluster.getSize() + cluster.euclideanDistance(point)));
+			context.write(outkey, outvalue);
 		} catch (IllegalStateException e) {
 			System.err.println("Error:\t" + e.getMessage() + " at row(" + key
 					+ ")");
