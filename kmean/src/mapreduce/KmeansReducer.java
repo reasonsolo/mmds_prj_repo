@@ -55,7 +55,7 @@ public class KmeansReducer extends
 	public void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
 		Configuration conf = context.getConfiguration();
-		threshold = conf.getFloat(Constants.THRESHOLD, 5.0f);
+		threshold = conf.getFloat(Constants.THRESHOLD, 0.000000001f);
 		DistanceMeasure dm = null;
 		try {
 			dm = (DistanceMeasure) Class.forName(

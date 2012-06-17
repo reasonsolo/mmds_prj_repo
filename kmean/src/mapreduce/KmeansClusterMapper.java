@@ -21,6 +21,8 @@ public class KmeansClusterMapper extends
 	private VectorDoubleWritable point = null;
 	protected KmeansClusterer clusterer = new KmeansClusterer();
 	protected Text outkey = new Text();
+	protected long linenumber = 0;
+	protected int lastfilehash = 0;
 
 	public void map(LongWritable key, Text values, Context context)
 			throws IOException {
@@ -30,10 +32,18 @@ public class KmeansClusterMapper extends
 		try {
 			cluster = clusterer.findNearestCluster(point);
 			// TODO Find a proper way to represent the clustering result.
-			System.out.println(((FileSplit) context.getInputSplit()).getPath()
-					.getName());
-			outkey.set(((FileSplit) context.getInputSplit()).getPath()
-					.getName() + "," + key.get());
+			/*
+			 * System.out.println(((FileSplit)
+			 * context.getInputSplit()).getPath() .getName());
+			 */
+			String filename = ((FileSplit) context.getInputSplit()).getPath()
+					.getName();
+			if (lastfilehash != filename.hashCode()) {
+				linenumber = 0;
+				lastfilehash = filename.hashCode();
+			} else
+				linenumber++;
+			outkey.set(filename + "," + linenumber);
 			context.write(outkey, cluster);
 		} catch (IllegalStateException e) {
 			System.err.println("Error:\t" + e.getMessage() + " at row(" + key

@@ -36,7 +36,7 @@ public class KmeansDriver {
 		Path in = new Path(args[0]);
 		Path out;
 		int iterCounter = 0;
-		conf.setFloat(Constants.THRESHOLD, 5.0f);
+		conf.setFloat(Constants.THRESHOLD, 0.000000001f);
 		try {
 			do {
 				if (iterCounter == 0)
@@ -73,8 +73,7 @@ public class KmeansDriver {
 				total = job.getCounters().getGroup(Constants.COUNTER_GROUP)
 						.findCounter(Constants.COUNTER_TOTAL);
 				System.out.println("CONVERGED: " + converge.getValue()
-						+ "\tTotal: " + total.getValue());
-				System.in.read();
+						+ "\tTotal: " + total.getValue() / 3);
 				iterCounter++;
 			} while (converge.getValue() < total.getValue() / 3);
 
