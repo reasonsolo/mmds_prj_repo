@@ -75,13 +75,10 @@ public class KmeansDriver {
 						.findCounter(Constants.COUNTER_TOTAL);
 				totalfile = job.getCounters().getGroup(Constants.COUNTER_GROUP)
 						.findCounter(Constants.COUNTER_FILE);
-				System.out
-						.println("CONVERGED: " + converge.getValue()
-								+ "\tTotal: " + total.getValue()
-								/ totalfile.getValue());
+				System.out.println("CONVERGED: " + converge.getValue()
+						+ "\tTotal: " + Constants.TOTAL);
 				iterCounter++;
-			} while (converge.getValue() < total.getValue()
-					/ totalfile.getValue());
+			} while (converge.getValue() < Constants.TOTAL);
 
 			conf.set(Constants.CLUSTER_PATH, args[1] + ".part"
 					+ (iterCounter - 1) + "/part-r-00000");
