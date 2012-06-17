@@ -9,14 +9,14 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import clusterer.CanopyCluster;
 import clusterer.CanopyClusterer;
-
 import vector.VectorDoubleWritable;
+import config.Constants;
 
 public class CanopyReducer extends
-		Reducer<LongWritable, VectorDoubleWritable, Text, CanopyCluster> {
+		Reducer<Text, VectorDoubleWritable, LongWritable, Text> {
 
 	private final ArrayList<CanopyCluster> canopies = new ArrayList<CanopyCluster>();
-
+	private Text outvalue = new Text();
 	private CanopyClusterer canopyClusterer;
 
 	CanopyClusterer getCanopyClusterer() {
@@ -24,22 +24,28 @@ public class CanopyReducer extends
 	}
 
 	@Override
-	public void reduce(LongWritable key, Iterable<VectorDoubleWritable> values,
+	public void reduce(Text key, Iterable<VectorDoubleWritable> values,
 			Context context) throws IOException, InterruptedException {
-
+		System.out.println("reducer:" + key.toString());
 		for (VectorDoubleWritable value : values) {
+			//System.out.println("1\n");
+			//value.print();
 			canopyClusterer.addPointToCanopies(value, canopies);
-
 		}
-
-		for (CanopyCluster canopy : canopies) {
-			context.write(new Text(canopy.getId().toString()), canopy);
+		
+		for (CanopyCluster canopy: this.canopies) {
+			outvalue.set(canopy.getCentroid().toString());
+			System.out.println(canopy.getId().toString() + " " + outvalue);
+			context.write(new LongWritable(canopy.getId()), outvalue); 
 		}
+	
 	}
 
 	@Override
 	public void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		canopyClusterer = new CanopyClusterer(context.getConfiguration());
+		
+		canopyClusterer = new CanopyClusterer();
+		canopyClusterer.useT3T4(Constants.T3, Constants.T4);
 	}
 }

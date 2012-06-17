@@ -34,8 +34,8 @@ public abstract class Cluster implements Writable, Cloneable {
 
 		if (s1.size() != s2.size())
 			throw new IllegalStateException("S1/S2 dimension mismatch!");
-		this.s1 = s1;
-		this.s2 = s2;
+		this.s1 = (VectorDoubleWritable) s1.clone();
+		this.s2 = (VectorDoubleWritable) s2.clone();
 		this.size = 1;// s1.size();
 		this.id = id;
 	}

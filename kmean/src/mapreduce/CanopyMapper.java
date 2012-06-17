@@ -11,9 +11,10 @@ import clusterer.CanopyCluster;
 import clusterer.CanopyClusterer;
 
 import vector.VectorDoubleWritable;
+import config.Constants;
 
 public class CanopyMapper extends
-		Mapper<LongWritable, Text, LongWritable, VectorDoubleWritable> {
+		Mapper<LongWritable, Text, Text, VectorDoubleWritable> {
 	private VectorDoubleWritable point = null;
 	protected CanopyClusterer canopyClusterer = new CanopyClusterer();
 	private ArrayList<CanopyCluster> canopies = new ArrayList<CanopyCluster>();
@@ -23,10 +24,9 @@ public class CanopyMapper extends
 	@Override
 	protected void map(LongWritable key, Text values, Context context)
 			throws IOException, InterruptedException {
-		System.out.println(values.toString());
+		//System.out.println(values.toString());
 		point = new VectorDoubleWritable(values);
 		canopyClusterer.addPointToCanopies(point, canopies);
-
 	}
 
 	@Override
@@ -40,8 +40,10 @@ public class CanopyMapper extends
 	protected void cleanup(Context context) throws IOException,
 			InterruptedException {
 		for (CanopyCluster canopy : canopies) { 
-			context.write(new LongWritable(canopy.getId()),
-					canopy.getCentroid());
+			if (canopy.getSize() >= Constants.CANOPY_MIN_NUMBER) {
+				context.write(//new Text(canopy.getId().toString()),
+					new Text("1"), canopy.getCentroid());
+			}
 		}
 		super.cleanup(context);
 	}

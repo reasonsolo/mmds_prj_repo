@@ -18,7 +18,7 @@ public class CanopyCluster extends Cluster {
 	}
 
 	public CanopyCluster(int i, VectorDoubleWritable c) {
-		super(1, c, c.times(c));
+		super(i, c, c.times(c));
 
 		weight = new VectorDoubleWritable();
 		center = c;
@@ -29,18 +29,23 @@ public class CanopyCluster extends Cluster {
 		if (size == 0) {
 			s1 = (VectorDoubleWritable) point.clone();
 			s2 = point.times(point);
+			/*
 			System.out.println(s1.size());
 			System.out.println(point.size());
 			for (Double elem : point.get()) {
 				System.out.println(elem.toString());
 			}
+			*/
 		} else {
 			if (s1.size() != point.size()) {
+				/*
 				System.out.println(s1.size());
+				/
 				System.out.println(point.size());
 				for (Double elem : point.get()) {
 					System.out.println(elem.toString());
 				}
+				*/
 				throw new IllegalStateException("Dimension mismatch!");
 			}
 			ListIterator<Double> ite1 = point.get().listIterator();
@@ -56,8 +61,10 @@ public class CanopyCluster extends Cluster {
 				ite2.set(c + p);
 				ite3.set(s + p * p);
 			}
-			System.out.println(s1.size());
-			System.out.println(s2.size());
+			/*
+			 * 		System.out.println(s1.size());
+			 *		System.out.println(s2.size());
+			 */
 
 		}
 		size++;
