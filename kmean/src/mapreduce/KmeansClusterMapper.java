@@ -44,8 +44,8 @@ public class KmeansClusterMapper extends Mapper<LongWritable, Text, Text, Text> 
 			} else
 				linenumber++;
 			outkey.set(filename + "," + linenumber);
-			outvalue.set(String.format("%s\t%s\t%s", cluster.getId(),
-					cluster.getSize() + cluster.euclideanDistance(point)));
+			outvalue.set(String.format("%d\t%d\t%f", cluster.getId(),
+					cluster.getSize(), cluster.euclideanDistance(point)));
 			context.write(outkey, outvalue);
 		} catch (IllegalStateException e) {
 			System.err.println("Error:\t" + e.getMessage() + " at row(" + key
