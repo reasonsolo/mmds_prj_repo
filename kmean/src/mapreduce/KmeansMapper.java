@@ -97,6 +97,10 @@ public class KmeansMapper extends
 						+ this.clusterer.getClusters().size() + ":\t"
 						+ clu.getCentroid());
 			}
+
+			System.out.println("Cluster TOTAL:"
+					+ context.getCounter(Constants.COUNTER_GROUP,
+							Constants.COUNTER_TOTAL).getValue());
 		}
 
 	}
