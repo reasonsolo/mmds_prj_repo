@@ -9,11 +9,12 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import clusterer.CanopyCluster;
 import clusterer.CanopyClusterer;
+import clusterer.KmeansCluster;
 import vector.VectorDoubleWritable;
 import config.Constants;
 
 public class CanopyReducer extends
-		Reducer<Text, VectorDoubleWritable, LongWritable, Text> {
+		Reducer<Text, VectorDoubleWritable, LongWritable, KmeansCluster> {
 
 	private final ArrayList<CanopyCluster> canopies = new ArrayList<CanopyCluster>();
 	private Text outvalue = new Text();
@@ -26,7 +27,6 @@ public class CanopyReducer extends
 	@Override
 	public void reduce(Text key, Iterable<VectorDoubleWritable> values,
 			Context context) throws IOException, InterruptedException {
-		System.out.println("reducer:" + key.toString());
 		for (VectorDoubleWritable value : values) {
 			//System.out.println("1\n");
 			//value.print();
@@ -34,9 +34,12 @@ public class CanopyReducer extends
 		}
 		
 		for (CanopyCluster canopy: this.canopies) {
-			outvalue.set(canopy.getCentroid().toString());
-			System.out.println(canopy.getId().toString() + " " + outvalue);
-			context.write(new LongWritable(canopy.getId()), outvalue); 
+			KmeansCluster kcluster = new KmeansCluster(canopy.getId(), 
+						canopy.getS1(), canopy.getS2());
+			System.out.println(canopy.getId().toString() 
+							+ "\t"
+							+ canopy.getCentroid().toString());
+			context.write(new LongWritable(kcluster.getId()), kcluster); 
 		}
 	
 	}

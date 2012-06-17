@@ -20,5 +20,5 @@ public class Constants {
 	public static String T1_KEY = "T1Key";
 	public static String T2_KEY = "T2Key";
 
-	public static boolean DEBUG = false;
+	public static boolean DEBUG = true;
 }

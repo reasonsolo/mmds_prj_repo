@@ -10,6 +10,7 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 //import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import vector.VectorDoubleWritable;
+import clusterer.KmeansCluster;
 import config.Constants;
 
 public class CanopyDriver {
@@ -51,7 +52,7 @@ public class CanopyDriver {
 			// configure reducer
 			job.setReducerClass(CanopyReducer.class);
 			job.setOutputKeyClass(LongWritable.class);
-			job.setOutputValueClass(Text.class);
+			job.setOutputValueClass(KmeansCluster.class);
 
 			job.waitForCompletion(true);
 
