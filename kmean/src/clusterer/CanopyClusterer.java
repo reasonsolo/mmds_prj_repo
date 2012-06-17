@@ -108,12 +108,9 @@ public class CanopyClusterer {
 		double tempdist = 0;
 		for (CanopyCluster canopy : canopies) {
 			tempdist = canopy.euclideanDistance(point);
-			//System.out.println(tempdist);
 			if (tempdist < this.t1) {
-				//System.out.print("true\t");
 				canopy.addPoint(point);
-				pointStronglyBound = true;
-				//break;
+				//pointStronglyBound = true;
 			} else {
 				//System.out.print("false\t");
 			}

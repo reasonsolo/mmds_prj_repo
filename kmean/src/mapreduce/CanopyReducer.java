@@ -3,6 +3,7 @@ package mapreduce;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -17,7 +18,6 @@ public class CanopyReducer extends
 		Reducer<Text, VectorDoubleWritable, LongWritable, KmeansCluster> {
 
 	private final ArrayList<CanopyCluster> canopies = new ArrayList<CanopyCluster>();
-	private Text outvalue = new Text();
 	private CanopyClusterer canopyClusterer;
 
 	CanopyClusterer getCanopyClusterer() {
@@ -37,8 +37,7 @@ public class CanopyReducer extends
 			KmeansCluster kcluster = new KmeansCluster(canopy.getId(), 
 						canopy.getS1(), canopy.getS2());
 			System.out.println(canopy.getId().toString() 
-							+ "\t"
-							+ canopy.getCentroid().toString());
+							+ "\t" + canopy.getCentroid().toString());
 			context.write(new LongWritable(kcluster.getId()), kcluster); 
 		}
 	
@@ -47,8 +46,9 @@ public class CanopyReducer extends
 	@Override
 	public void setup(Context context) throws IOException, InterruptedException {
 		super.setup(context);
-		
+		Configuration conf = context.getConfiguration();
 		canopyClusterer = new CanopyClusterer();
-		canopyClusterer.useT3T4(Constants.T3, Constants.T4);
+		canopyClusterer.useT3T4(conf.getFloat(Constants.T3_KEY, 0.1f),
+					conf.getFloat(Constants.T4_KEY, 0.2f));
 	}
 }

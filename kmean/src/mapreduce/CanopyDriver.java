@@ -21,7 +21,7 @@ public class CanopyDriver {
 	public static void main(String[] args) {
 
 		if (args.length < 4) {
-			System.out.println("Usage: program <t1> <t2> <input> <output>");
+			System.out.println("Usage: program <t1> <t2> <t3> <t4> <input> <output>");
 			System.exit(0);
 		}
 
@@ -29,9 +29,11 @@ public class CanopyDriver {
 
 		conf.set(Constants.T1_KEY, args[0]);
 		conf.set(Constants.T2_KEY, args[1]);
+		conf.set(Constants.T3_KEY, args[2]);
+		conf.set(Constants.T4_KEY, args[3]);
 		
-		Path in = new Path(args[2]);
-		Path out = new Path(args[3]);
+		Path in = new Path(args[4]);
+		Path out = new Path(args[5]);
 
 		try {
 			Job job = new Job(conf);

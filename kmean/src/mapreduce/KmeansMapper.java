@@ -31,7 +31,7 @@ public class KmeansMapper extends
 		KmeansCluster cluster = null;
 		try {
 			cluster = clusterer.findNearestCluster(point);
-
+			
 			KmeansCluster value = new KmeansCluster(cluster.getId(), point,
 					point.times(point));
 
@@ -40,7 +40,10 @@ public class KmeansMapper extends
 			 * value.getCentroid().get().toString() + "\t" + value.getS1().get()
 			 * + "\t" + value.getS2().get());
 			 */
-
+			if (cluster.getId() == 0) {
+				System.out.println("Find ZERO here!");
+				System.in.read();
+			}
 			id.set(cluster.getId());
 			context.write(id, value);
 		} catch (IllegalStateException e) {
@@ -97,6 +100,10 @@ public class KmeansMapper extends
 						+ this.clusterer.getClusters().size() + ":\t"
 						+ clu.getCentroid());
 			}
+
+			System.out.println("Cluster TOTAL:"
+					+ context.getCounter(Constants.COUNTER_GROUP,
+							Constants.COUNTER_TOTAL).getValue());
 		}
 
 	}

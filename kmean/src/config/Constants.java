@@ -12,8 +12,8 @@ public class Constants {
 	public static int CANOPY_REDUCER_NUMBER = 1;
 	public static int CANOPY_MIN_NUMBER = 5;
 
-	public static double T3 = 0.2;
-	public static double T4 = 0.4;
+	public static String T3_KEY = "T3Key";
+	public static String T4_KEY = "T4Key";
 
 	public static String COUNTER_FILE = "TotalFiles";
 
@@ -21,6 +21,5 @@ public class Constants {
 	public static String T2_KEY = "T2Key";
 
 	public static boolean DEBUG = true;
-	public static long TOTAL = 3;
-
+	// public static long TOTAL = 3;
 }
