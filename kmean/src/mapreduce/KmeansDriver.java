@@ -37,7 +37,7 @@ public class KmeansDriver {
 		Path in = new Path(args[0]);
 		Path out;
 		int iterCounter = 0;
-		conf.setFloat(Constants.THRESHOLD, 0.0000001f);
+		conf.setFloat(Constants.THRESHOLD, 0.0001f);
 		try {
 			do {
 				if (iterCounter == 0)
