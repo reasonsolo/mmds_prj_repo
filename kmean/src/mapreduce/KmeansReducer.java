@@ -27,11 +27,13 @@ public class KmeansReducer extends
 		KmeansCluster cluster = clusterMap.get(key.get());
 		System.out.println("Reducer cluster:\t" + cluster.getId());
 		for (KmeansCluster value : values) {
-			System.out.println("Values:\t" + key + "\t"
-					+ value.getCentroid().get().toString());
+			if (Constants.DEBUG)
+				System.out.println("Values:\t" + key + "\t"
+						+ value.getCentroid().get().toString());
 			cluster.omitCluster(value);
 		}
-		System.out.println("Cluster:\t" + cluster.getCentroid().get());
+		if (Constants.DEBUG)
+			System.out.println("Cluster:\t" + cluster.getCentroid().get());
 
 		if (clusterer.isConverged(cluster, threshold))
 			context.getCounter(Constants.COUNTER_GROUP,

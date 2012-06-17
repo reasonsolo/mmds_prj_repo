@@ -14,6 +14,8 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.util.ReflectionUtils;
 
+import config.Constants;
+
 import vector.VectorDoubleWritable;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
@@ -48,7 +50,8 @@ public class KmeansClusterer {
 
 		while (reader.next(key, value)) {
 			clusters.add(value);
-			clusterMap.put(new Long(value.getId()), value);
+			clusterMap.put(new Long(value.getId()),
+					(KmeansCluster) value.clone());
 			value = new KmeansCluster();
 		}
 
@@ -73,7 +76,10 @@ public class KmeansClusterer {
 
 	public boolean isConverged(KmeansCluster cluster, double threshold) {
 		KmeansCluster last = clusterMap.get(new Long(cluster.getId()));
-		return dm.distance(cluster.getCentroid(), last.getCentroid()) < threshold;
+		double dist = dm.distance(cluster.getCentroid(), last.getCentroid());
+		if (Constants.DEBUG)
+			System.out.println("DIST:" + dist);
+		return dist < threshold;
 	}
 
 	public ArrayList<KmeansCluster> getClusters() {

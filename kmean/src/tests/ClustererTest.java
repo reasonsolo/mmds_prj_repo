@@ -36,7 +36,7 @@ public class ClustererTest {
 			BufferedReader reader = new BufferedReader(new FileReader(
 					"dataset/testdata/cluster/testcluster"));
 			String temp = null;
-			for (int i = 0; i < 14; i++) {
+			for (int i = 0; i < 20; i++) {
 				temp = reader.readLine();
 				vec[i] = new VectorDoubleWritable(new Text(temp));
 			}

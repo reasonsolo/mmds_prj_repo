@@ -85,14 +85,18 @@ public class KmeansMapper extends
 				.setValue(0);
 		context.getCounter(Constants.COUNTER_GROUP, Constants.COUNTER_TOTAL)
 				.setValue(this.clusterer.getClusters().size());
+		context.getCounter(Constants.COUNTER_GROUP, Constants.COUNTER_FILE)
+				.increment(1);
 
-		System.out.println("Mapper setup: Total cluster="
-				+ context.getCounter(Constants.COUNTER_GROUP,
-						Constants.COUNTER_TOTAL).getValue());
-		for (KmeansCluster clu : clusterer.getClusters()) {
-			System.out.println("Cluster " + clu.getId() + "/"
-					+ this.clusterer.getClusters().size() + ":\t"
-					+ clu.getCentroid());
+		if (Constants.DEBUG) {
+			System.out.println("Mapper setup: Total cluster="
+					+ context.getCounter(Constants.COUNTER_GROUP,
+							Constants.COUNTER_TOTAL).getValue());
+			for (KmeansCluster clu : clusterer.getClusters()) {
+				System.out.println("Cluster " + clu.getId() + "/"
+						+ this.clusterer.getClusters().size() + ":\t"
+						+ clu.getCentroid());
+			}
 		}
 
 	}
