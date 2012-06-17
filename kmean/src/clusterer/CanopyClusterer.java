@@ -25,6 +25,8 @@ public class CanopyClusterer {
 	protected DistanceMeasure dm;
 	protected double t1;
 	protected double t2;
+	protected double t3;
+	protected double t4;
 	protected int nextID;
 
 	public CanopyClusterer() {
@@ -38,7 +40,19 @@ public class CanopyClusterer {
 		this.dm = dm;
 		this.t1 = t1;
 		this.t2 = t2;
+		this.t3 = t1;
+		this.t4 = t2;
 		nextID = 0;
+	}
+	public void useT3T4(double t3, double t4) {
+		this.t3 = this.t1;
+		this.t4 = this.t2;
+		this.t1 = t3; 
+		this.t2 = t4;
+	}
+	public void useT1T2() {
+		this.t1 = this.t3;
+		this.t2 = this.t4;
 	}
 
 	public CanopyClusterer(Configuration configuration) {
@@ -90,20 +104,27 @@ public class CanopyClusterer {
 
 	public boolean addPointToCanopies(VectorDoubleWritable point,
 			ArrayList<CanopyCluster> canopies) throws IllegalStateException {
-		boolean flag = false;
+		boolean pointStronglyBound = false;
 		double tempdist = 0;
 		for (CanopyCluster canopy : canopies) {
 			tempdist = canopy.euclideanDistance(point);
+			//System.out.println(tempdist);
 			if (tempdist < this.t1) {
+				//System.out.print("true\t");
 				canopy.addPoint(point);
-				flag = true;
+				pointStronglyBound = true;
+				//break;
+			} else {
+				//System.out.print("false\t");
 			}
+			//System.out.println(tempdist);
+			pointStronglyBound = pointStronglyBound || tempdist < t2;  
 		}
-		if (flag == false) {
+		if (!pointStronglyBound) {
 			CanopyCluster newCanopy = new CanopyCluster(nextID++, point);
 			canopies.add(newCanopy);
 		}
-		return flag;
+		return pointStronglyBound;
 	}
 
 	public ArrayList<CanopyCluster> getClusters() {

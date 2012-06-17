@@ -18,7 +18,7 @@ public class CanopyCluster extends Cluster {
 	}
 
 	public CanopyCluster(int i, VectorDoubleWritable c) {
-		super(1, c, c.times(c));
+		super(i, c, c.times(c));
 
 		weight = new VectorDoubleWritable();
 		center = c;
