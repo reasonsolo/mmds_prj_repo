@@ -1,6 +1,6 @@
 package distanceMeasure;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 
 public class EuclideanDistance implements DistanceMeasure {
 

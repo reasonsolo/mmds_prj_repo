@@ -1,8 +1,10 @@
 package clusterer;
 
-import utils.VectorDoubleWritable;
+import org.apache.hadoop.io.Writable;
 
-public class KmeansCluster extends Cluster implements Cloneable {
+import vector.VectorDoubleWritable;
+
+public class KmeansCluster extends Cluster implements Writable, Cloneable {
 
 	public KmeansCluster() {
 		super();

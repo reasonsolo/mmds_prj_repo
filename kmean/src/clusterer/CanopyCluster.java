@@ -5,7 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ListIterator;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 
 public class CanopyCluster extends Cluster {
 	protected VectorDoubleWritable center;

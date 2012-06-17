@@ -14,7 +14,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.util.ReflectionUtils;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 

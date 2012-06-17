@@ -11,7 +11,7 @@ import org.apache.hadoop.io.Text;
 import org.junit.Before;
 import org.junit.Test;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 

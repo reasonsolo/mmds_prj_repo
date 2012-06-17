@@ -13,7 +13,7 @@ import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 import clusterer.KmeansCluster;
 
 public class ClusterTest {

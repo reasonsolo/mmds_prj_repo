@@ -7,8 +7,9 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 import clusterer.KmeansCluster;
 import clusterer.KmeansClusterer;
 import config.Constants;
@@ -16,9 +17,10 @@ import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
 
 public class KmeansClusterMapper extends
-		Mapper<LongWritable, Text, LongWritable, LongWritable> {
+		Mapper<LongWritable, Text, Text, KmeansCluster> {
 	private VectorDoubleWritable point = null;
 	protected KmeansClusterer clusterer = new KmeansClusterer();
+	protected Text outkey = new Text();
 
 	public void map(LongWritable key, Text values, Context context)
 			throws IOException {
@@ -28,7 +30,11 @@ public class KmeansClusterMapper extends
 		try {
 			cluster = clusterer.findNearestCluster(point);
 			// TODO Find a proper way to represent the clustering result.
-			context.write(new LongWritable(cluster.getId()), key);
+			System.out.println(((FileSplit) context.getInputSplit()).getPath()
+					.getName());
+			outkey.set(((FileSplit) context.getInputSplit()).getPath()
+					.getName() + "," + key.get());
+			context.write(outkey, cluster);
 		} catch (IllegalStateException e) {
 			System.err.println("Error:\t" + e.getMessage() + " at row(" + key
 					+ ")");

@@ -43,9 +43,12 @@ public class KmeansReducer extends
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Converaged cluster:\t"
+		System.out.println("Converaged cluster:"
 				+ context.getCounter(Constants.COUNTER_GROUP,
-						Constants.COUNTER_CONVERGED).getValue());
+						Constants.COUNTER_CONVERGED).getValue()
+				+ "\tTotal clusters:"
+				+ context.getCounter(Constants.COUNTER_GROUP,
+						Constants.COUNTER_TOTAL).getValue());
 	}
 
 	@Override

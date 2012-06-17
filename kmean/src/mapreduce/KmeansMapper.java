@@ -8,7 +8,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 import clusterer.KmeansCluster;
 import clusterer.KmeansClusterer;
 import config.Constants;
@@ -82,6 +82,18 @@ public class KmeansMapper extends
 				e.printStackTrace();
 			}
 		context.getCounter(Constants.COUNTER_GROUP, Constants.COUNTER_TOTAL)
+				.setValue(0);
+		context.getCounter(Constants.COUNTER_GROUP, Constants.COUNTER_TOTAL)
 				.setValue(this.clusterer.getClusters().size());
+
+		System.out.println("Mapper setup: Total cluster="
+				+ context.getCounter(Constants.COUNTER_GROUP,
+						Constants.COUNTER_TOTAL).getValue());
+		for (KmeansCluster clu : clusterer.getClusters()) {
+			System.out.println("Cluster " + clu.getId() + "/"
+					+ this.clusterer.getClusters().size() + ":\t"
+					+ clu.getCentroid());
+		}
+
 	}
 }

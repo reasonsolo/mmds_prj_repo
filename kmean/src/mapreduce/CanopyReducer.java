@@ -10,7 +10,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import clusterer.CanopyCluster;
 import clusterer.CanopyClusterer;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 
 public class CanopyReducer extends
 		Reducer<LongWritable, VectorDoubleWritable, Text, CanopyCluster> {

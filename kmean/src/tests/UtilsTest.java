@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 
 public class UtilsTest {
 	VectorDoubleWritable vec[] = new VectorDoubleWritable[10];

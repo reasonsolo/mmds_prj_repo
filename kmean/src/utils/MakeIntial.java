@@ -1,7 +1,5 @@
-package tests;
+package utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeNoException;
 
@@ -10,7 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -18,29 +15,30 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
-import org.junit.Before;
-import org.junit.Test;
 
 import vector.VectorDoubleWritable;
 import clusterer.KmeansCluster;
-import clusterer.KmeansClusterer;
 
-public class ClustererTest {
-	KmeansClusterer clusterer = new KmeansClusterer();
-	VectorDoubleWritable vec[] = new VectorDoubleWritable[20];
+public class MakeIntial {
 
-	@Before
-	public void setUp() {
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		VectorDoubleWritable vec[] = new VectorDoubleWritable[10];
 		KmeansCluster clusters[] = new KmeansCluster[5];
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(
-					"dataset/testdata/cluster/testcluster"));
-			String temp = null;
-			for (int i = 0; i < 14; i++) {
+			String files[] = { "abs.txt", "aerosol.txt", "airplane.txt" };
+			int i = 0;
+			for (String file : files) {
+				BufferedReader reader = new BufferedReader(new FileReader(
+						"/home/phoenix/workspace/hadoop/mmds_prj_repo/kmean/dataset/HSV64/"
+								+ file));
+				String temp = null;
 				temp = reader.readLine();
-				vec[i] = new VectorDoubleWritable(new Text(temp));
+				vec[i++] = new VectorDoubleWritable(new Text(temp));
+				reader.close();
 			}
-			reader.close();
 
 			Configuration conf = new Configuration();
 			Path path = new Path("hdfs://master:54310/kmeans/initial/initial");
@@ -52,7 +50,7 @@ public class ClustererTest {
 			writer = new SequenceFile.Writer(fs, conf, path,
 					LongWritable.class, KmeansCluster.class);
 
-			for (int i = 0; i < 3; i++) {
+			for (i = 0; i < 3; i++) {
 				clusters[i] = new KmeansCluster(i);
 				clusters[i].addPoint(vec[i]);
 
@@ -71,26 +69,5 @@ public class ClustererTest {
 			e.printStackTrace();
 			fail("Can't set up!");
 		}
-	}
-
-	@Test
-	public void testLoadClusters() throws IOException, URISyntaxException {
-		Configuration conf = new Configuration();
-		String clusterPath = "hdfs://master:54310/kmeans/initial/initial";
-
-		ArrayList<KmeansCluster> clusters = clusterer.getClusters();
-		assertEquals(clusters.size(), 0);
-
-		clusterer.loadClusters(clusterPath, conf);
-
-		int i = 0;
-		for (KmeansCluster cluster : clusters) {
-			assertTrue(cluster.getId() == i);
-			assertTrue(clusterer.getClusters().contains(cluster));
-			assertEquals(cluster.getCentroid().size(), 2);
-			i++;
-		}
-
-		assertEquals(clusters.size(), 3);
 	}
 }

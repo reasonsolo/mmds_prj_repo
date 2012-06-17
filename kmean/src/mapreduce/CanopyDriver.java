@@ -7,7 +7,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 import config.Constants;
 
 public class CanopyDriver {

@@ -5,10 +5,12 @@ import java.util.Date;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
 import clusterer.KmeansCluster;
@@ -70,11 +72,30 @@ public class KmeansDriver {
 						.findCounter(Constants.COUNTER_CONVERGED);
 				total = job.getCounters().getGroup(Constants.COUNTER_GROUP)
 						.findCounter(Constants.COUNTER_TOTAL);
-				System.out.println("CONVERGED:\t" + converge.getValue() + "\t"
-						+ total.getValue());
+				System.out.println("CONVERGED: " + converge.getValue()
+						+ "\tTotal: " + total.getValue());
+				System.in.read();
 				iterCounter++;
-			} while (converge.getValue() < total.getValue());
+			} while (converge.getValue() < total.getValue() / 3);
 
+			conf.set(Constants.CLUSTER_PATH, args[1] + ".part"
+					+ (iterCounter - 1) + "/part-r-00000");
+			Job job = new Job(conf);
+			job.setNumReduceTasks(0);
+			job.setJobName("K-means clustering");
+			job.setJarByClass(KmeansDriver.class);
+			job.setMapperClass(KmeansClusterMapper.class);
+
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(KmeansCluster.class);
+			job.setMapOutputKeyClass(Text.class);
+			job.setMapOutputValueClass(KmeansCluster.class);
+
+			out = new Path(args[1] + ".final");
+			FileInputFormat.addInputPath(job, in);
+			FileOutputFormat.setOutputPath(job, out);
+
+			job.waitForCompletion(true);
 		} catch (Exception e) {
 			// TODO:
 			// a better error report routine

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.apache.hadoop.io.Writable;
 
-import utils.VectorDoubleWritable;
+import vector.VectorDoubleWritable;
 
 public abstract class Cluster implements Writable, Cloneable {
 	protected Integer id;
