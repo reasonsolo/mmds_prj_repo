@@ -6,7 +6,8 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+//import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import vector.VectorDoubleWritable;
 import config.Constants;
@@ -39,9 +40,9 @@ public class CanopyDriver {
 			job.setJarByClass(CanopyDriver.class);
 			// general configuration
 			TextInputFormat.addInputPath(job, in);
-			TextOutputFormat.setOutputPath(job, out);
+			SequenceFileOutputFormat.setOutputPath(job, out);
 			job.setInputFormatClass(TextInputFormat.class);
-			job.setOutputFormatClass(TextOutputFormat.class);
+			job.setOutputFormatClass(SequenceFileOutputFormat.class);
 			
 			// configure mapper
 			job.setMapperClass(CanopyMapper.class);
