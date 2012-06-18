@@ -104,7 +104,10 @@ The detail of the first phase is described as follows
   that all clusters are converged, this phase is finished.
 \end{enumerate} 
 \subsubsection{Assign Point to Clusters}
-After the iterations, 
+After the iterations, the clusters are stable. Next we are going to assign every
+point to its nearest cluster. This phase only require mapper to do all the
+works, since this procedure is highly parallelized. Each two point are
+independent of each other.
 
 \bibliographystyle{plain}
 \bibliography{myrefs}
