@@ -14,6 +14,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.util.ReflectionUtils;
 
+import config.Constants;
 import vector.VectorDoubleWritable;
 import distanceMeasure.DistanceMeasure;
 import distanceMeasure.EuclideanDistance;
@@ -110,11 +111,16 @@ public class CanopyClusterer {
 			tempdist = canopy.euclideanDistance(point);
 			if (tempdist < this.t1) {
 				canopy.addPoint(point);
-				//pointStronglyBound = true;
-			} else {
-				//System.out.print("false\t");
+				pointStronglyBound = true;
 			}
-			//System.out.println(tempdist);
+			if (Constants.DEBUG) {
+				if (pointStronglyBound) {
+					System.out.print("bound   \t");
+				} else {
+					System.out.print("notbound\t");
+				}
+				System.out.println(tempdist);
+			}
 			pointStronglyBound = pointStronglyBound || tempdist < t2;  
 		}
 		if (!pointStronglyBound) {

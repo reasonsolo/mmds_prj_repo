@@ -10,7 +10,7 @@ public class Constants {
 	public static String COUNTER_CONVERGED = "ConvergedCluster";
 
 	public static int CANOPY_REDUCER_NUMBER = 1;
-	public static int CANOPY_MIN_NUMBER = 5;
+	public static int CANOPY_MIN_NUMBER = 10;
 
 	public static String T3_KEY = "T3Key";
 	public static String T4_KEY = "T4Key";
