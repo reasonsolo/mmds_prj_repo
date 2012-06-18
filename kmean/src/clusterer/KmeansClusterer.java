@@ -63,16 +63,19 @@ public class KmeansClusterer {
 		KmeansCluster nearest = null;
 		double mindist = Double.MAX_VALUE;
 		double tempdist = 0;
-		System.out.println(clusters.size());
+		if (Constants.DEBUG)
+			System.out.println(clusters.size());
 		for (KmeansCluster cluster : clusters) {
 			tempdist = dm.distance(cluster.getCentroid(), point);
-			System.out.print(tempdist + "\t");
+			if (Constants.DEBUG)
+				System.out.print(tempdist + "\t");
 			if (tempdist < mindist) {
 				mindist = tempdist;
 				nearest = cluster;
 			}
 		}
-		System.out.println();
+		if (Constants.DEBUG)
+			System.out.println();
 		return nearest;
 	}
 

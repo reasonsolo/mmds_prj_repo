@@ -30,20 +30,14 @@ public class KmeansMapper extends
 
 		KmeansCluster cluster = null;
 		try {
-			cluster = clusterer.findNearestCluster(point);
+			System.out.println("Number of clusters: "
+					+ clusterer.getClusters().size());
 			
+			cluster = clusterer.findNearestCluster(point);
+
 			KmeansCluster value = new KmeansCluster(cluster.getId(), point,
 					point.times(point));
 
-			/*
-			 * System.out.println(value.getId() + "\t" +
-			 * value.getCentroid().get().toString() + "\t" + value.getS1().get()
-			 * + "\t" + value.getS2().get());
-			 */
-			if (cluster.getId() == 0) {
-				System.out.println("Find ZERO here!");
-				System.in.read();
-			}
 			id.set(cluster.getId());
 			context.write(id, value);
 		} catch (IllegalStateException e) {
