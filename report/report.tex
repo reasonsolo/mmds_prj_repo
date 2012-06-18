@@ -1,0 +1,112 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{url}
+
+\title{Mining of Massive Dataset}
+\author{Hao Jiteng, Zhou Lizhi, Yang Fangzhou}
+
+\begin{document}
+
+\maketitle
+%\tableofcontents
+
+\begin{abstract}
+K-means is a simple yet useful clustering algorithm. It's underline natural
+implies that it could be parallelized or distributized. Some implementation of
+kmeans employs platforms such as Hadoop and CUDA to boost the process of mining
+of massive dataset.
+In our project we implement k-means algorithm on Apache Hadoop Project. We ran
+our algorithm on our tiny cluster. Evaluation has been done to measure our
+algorithm.
+\end{abstract}
+
+\section{Introduction}
+\subsection{Hadoop}
+Following is the introduction of Hadoop on its project
+homepage~\cite{apache:hadoop}.
+
+The Apache™ Hadoop™ project develops open-source software for reliable,
+scalable, distributed computing.
+
+The Apache Hadoop software library is a framework that allows for the
+distributed processing of large data sets across clusters of computers using a
+simple programming model. It is designed to scale up from single servers to
+thousands of machines, each offering local computation and storage. Rather than
+rely on hardware to deliver high-avaiability, the library itself is designed to
+detect and handle failures at the application layer, so delivering a
+highly-available service on top of a cluster of computers, each of which may
+be prone to failures.
+
+We mainly use the Hadoop MapReduce framework rather than HDFS.
+
+\subsection{k-means}
+There are many materials that introduce k-means
+algorithms. MacQueen, J. et al. proposed k-means algorithm in
+\cite{algo:kmeans1}. In \cite{algo:kmeans2} the author introduced a simple
+k-means MapReduce algorithm. 
+
+The dataset is relatively large comparing to the memory size. Thus we need a
+mechanism to deal with the incompatibility of memory. MapReduce is a solution to
+this problem. The detail of our algorithm is documented in the following
+section.
+
+\subsection{Dataset}
+% TODO 
+
+\section{Clustering Algorithm}
+In this section we discuss the k-means clustering algorithm used in our
+implementation. Note that to find proper initial clusters, which may lead to
+fewer iterations and good result, we also implemented a Canopy clustering
+MapReduce algorithm.
+\subsection{Canopy Clustering}
+% TODO
+\subsection{k-means Clustering}
+Mahout Project~\cite{apache:mahout} is a data mining framework under Apache™
+Fundation. It contains a k-means implementation. The blog~\cite{algo:kmeans3}
+gives a very detailed view of the algorithm. Our algorithm mainly based on the
+idea of Mahout Project. Actually, this algorithm is very similar to the BFR
+algorithm in our lectures.
+
+The algorithm is built up by the following MapReduce phases,
+\begin{enumerate}
+  \item The k-means iteration, output every cluster centroid if
+  converged.  	
+  \item Assign every point to a known cluster and output the result.
+\end{enumerate}
+
+The detail of the first phase is described as follows
+\subsubsection{Iterations}
+\begin{enumerate}
+  \item Mapper\verb|<LongWritable, Text>|$\rightarrow$
+  \verb|<LongWritable,KmeansCluster>|. It reads the input file content as value.
+  The key is the value offset in the file. Then it convert the value to a
+  VectorDoubleWritable, which is used to represent the feature vector. It finds
+  the nearest cluster to the vector, and output cluster id as key, a new cluster
+  containing only point as value.
+  \item Combiner\verb|<LongWritable, KmeansCluster>|$\rightarrow$
+  \verb|<LongWritable, KmeansCluster|. It reads the output from Mapper and
+  combine those tuples who have the same cluster id(meaning that they are
+  assigned to the same cluster) using KmeansCluster.omitCluster(). This function
+  reduced the network transmission flow because the actual meaningful
+  information need to be communicated between different nodes are only the N,
+  SUM and SUMSQ of clusters, which is described in the lecture slides of BFR algorithm.
+  \item Reducer\verb|<LongWritable, KmeansCluster>|$\rightarrow$
+  \verb|<LongWritable, KmeansCluster>|. It reads the cluster id as key and the
+  KmeansCluster as value. It adds the N, SUM and SUMSQ. The result leads to the
+  combination of clusters. Finally the reducer outputs the result clusters of
+  this single iteration. This clusters are input of next iteration. During
+  reducer, if the movement of one cluster if less than a threshold, it's said
+  to be ``Converged''. If a cluster is converged, a counter in context will
+  increase by one.
+  \item If, in the driver, the counter equals the number of clusters, meaning
+  that all clusters are converged, this phase is finished.
+\end{enumerate} 
+\subsubsection{Assign Point to Clusters}
+After the iterations, 
+
+\bibliographystyle{plain}
+\bibliography{myrefs}
+
+\end{document}
