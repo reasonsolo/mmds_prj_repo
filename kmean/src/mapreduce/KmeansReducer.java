@@ -24,7 +24,9 @@ public class KmeansReducer extends
 	@Override
 	public void reduce(LongWritable key, Iterable<KmeansCluster> values,
 			Context context) throws IOException {
-		KmeansCluster cluster = clusterMap.get(key.get());
+		// KmeansCluster cluster = clusterMap.get(key.get());
+		KmeansCluster cluster = new KmeansCluster((int) key.get());
+		
 		System.out.println("Reducer cluster:\t" + cluster.getId());
 		System.out.println("BEFORE REDUCE");
 		for (KmeansCluster kcluster : clusterer.getClusters()) {
