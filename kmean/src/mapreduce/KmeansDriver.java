@@ -44,7 +44,7 @@ public class KmeansDriver {
 		Path in = new Path(args[0]);
 		Path out;
 		int iterCounter = 0;
-		conf.setFloat(Constants.THRESHOLD, 0.000001f);
+		conf.setFloat(Constants.THRESHOLD, 0.00001f);
 		try {
 			do {
 				if (iterCounter == 0)
@@ -93,7 +93,7 @@ public class KmeansDriver {
 				iterCounter++;
 			} while ((converge.getValue() < total.getValue()
 					/ totalfile.getValue())
-					|| (iterCounter > maxIteraion));
+					&& (iterCounter < maxIteraion));
 
 			conf.set(Constants.CLUSTER_PATH, args[1] + ".part"
 					+ (iterCounter - 1) + "/part-r-00000");
