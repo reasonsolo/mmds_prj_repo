@@ -31,9 +31,9 @@ public class KmeansMapper extends
 		KmeansCluster cluster = null;
 		try {
 			if (Constants.DEBUG)
-				System.out.println("Number of clusters: " 
+				System.out.println("Number of clusters: "
 						+ clusterer.getClusters().size());
-			
+
 			cluster = clusterer.findNearestCluster(point);
 
 			KmeansCluster value = new KmeansCluster(cluster.getId(), point,
@@ -85,6 +85,11 @@ public class KmeansMapper extends
 				.setValue(this.clusterer.getClusters().size());
 		context.getCounter(Constants.COUNTER_GROUP, Constants.COUNTER_FILE)
 				.increment(1);
+
+		for (KmeansCluster cluster : this.clusterer.getClusters()) {
+			context.write(new LongWritable(cluster.getId()), new KmeansCluster(
+					cluster.getId()));
+		}
 
 		if (Constants.DEBUG) {
 			System.out.println("Mapper setup: Total cluster="
