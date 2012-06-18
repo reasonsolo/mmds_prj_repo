@@ -30,8 +30,9 @@ public class KmeansMapper extends
 
 		KmeansCluster cluster = null;
 		try {
-			System.out.println("Number of clusters: "
-					+ clusterer.getClusters().size());
+			if (Constants.DEBUG)
+				System.out.println("Number of clusters: " 
+						+ clusterer.getClusters().size());
 			
 			cluster = clusterer.findNearestCluster(point);
 
