@@ -35,9 +35,9 @@ public class KmeansDriver {
 		Counter converge = null;
 		Counter total = null;
 		Counter totalfile = null;
-		float threshold = 0.0000001f;
+		float threshold = 0.00001f;
 		if ((args.length >= 4) && (args[3] != null) && (!args[3].isEmpty()))
-			Integer.parseInt(args[3]);
+			threshold = Float.parseFloat(args[3]);
 		int maxIteraion = 50;
 		if ((args.length >= 3) && (args[2] != null) && (!args[2].isEmpty()))
 			maxIteraion = Integer.parseInt(args[2]);
