@@ -1,20 +1,20 @@
-/*package mapreduce;
+package mapreduce;
 
 import java.io.IOException;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 
-import utils.VectorDoubleWritable;
-import canopy.Canopy;
+import vector.VectorDoubleWritable;
+import clusterer.CanopyCluster;
 
 public class CanopyCombiner
 		extends
-		Reducer<LongWritable, Iterable<VectorDoubleWritable>, LongWritable, Canopy> {
+		Reducer<LongWritable, Iterable<VectorDoubleWritable>, LongWritable, CanopyCluster> {
 
 	public void reduce(LongWritable key, Iterable<VectorDoubleWritable> values,
 			Context context) throws IOException {
-		Canopy canopy = new Canopy();
+		CanopyCluster canopy = new CanopyCluster();
 		for (VectorDoubleWritable point : values) {
 			canopy.addPoint(point);
 		}
@@ -26,4 +26,3 @@ public class CanopyCombiner
 		}
 	}
 }
-*/
