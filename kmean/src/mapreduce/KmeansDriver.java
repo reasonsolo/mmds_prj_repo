@@ -25,7 +25,8 @@ public class KmeansDriver {
 		Date start = new Date();
 
 		if (args.length < 2) {
-			System.out.println("Usage: program <input> <clusters>");
+			System.out
+					.println("Usage: program <input> <clusters> [max iteration]");
 			System.exit(0);
 		}
 
@@ -34,6 +35,12 @@ public class KmeansDriver {
 		Counter converge = null;
 		Counter total = null;
 		Counter totalfile = null;
+		int maxIteraion = 50;
+		if ((args[2] != null) && (!args[2].isEmpty()))
+			maxIteraion = Integer.parseInt(args[2]);
+		else
+			maxIteraion = 50;
+		System.out.println("Max Iteration is " + maxIteraion);
 		Path in = new Path(args[0]);
 		Path out;
 		int iterCounter = 0;
@@ -80,8 +87,9 @@ public class KmeansDriver {
 								+ "\tTotal: " + total.getValue()
 								/ totalfile.getValue());
 				iterCounter++;
-			} while (converge.getValue() < total.getValue()
-					/ totalfile.getValue());
+			} while ((converge.getValue() < total.getValue()
+					/ totalfile.getValue())
+					|| (iterCounter > maxIteraion));
 
 			conf.set(Constants.CLUSTER_PATH, args[1] + ".part"
 					+ (iterCounter - 1) + "/part-r-00000");
