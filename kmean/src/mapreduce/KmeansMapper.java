@@ -90,7 +90,8 @@ public class KmeansMapper extends
 			context.write(new LongWritable(cluster.getId()), new KmeansCluster(
 					cluster.getId()));
 		}
-
+		System.out.println(clusterer.getClusters().size());
+		//System.in.read();
 		if (Constants.DEBUG) {
 			System.out.println("Mapper setup: Total cluster="
 					+ context.getCounter(Constants.COUNTER_GROUP,

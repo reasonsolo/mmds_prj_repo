@@ -84,7 +84,7 @@ public abstract class Cluster implements Writable, Cloneable {
 	}
 
 	public void omitCluster(KmeansCluster omitee) {
-		System.out
+		/*System.out
 				.println("---------------------------------------------------------------------------");
 		System.out.println("Omit_Size:\t" + omitee.getSize());
 		System.out.println("Size:\t" + size);
@@ -93,7 +93,7 @@ public abstract class Cluster implements Writable, Cloneable {
 		System.out.println("Omit_S2:\t" + omitee.getS2().get().toString());
 		System.out.println("S2:\t\t" + s2.get().toString());
 		System.out
-				.println("---------------------------------------------------------------------------");
+				.println("---------------------------------------------------------------------------");*/
 		if (size == 0) {
 			s1 = (VectorDoubleWritable) omitee.getS1().clone();
 			s2 = (VectorDoubleWritable) omitee.getS2().clone();
@@ -103,14 +103,19 @@ public abstract class Cluster implements Writable, Cloneable {
 			s2 = s2.plus(omitee.getS2());
 			size += omitee.getSize();
 		}
-		System.out
+		/*System.out
 				.println("---------------------------------------------------------------------------");
 		System.out.println("Omit_Size:\t" + omitee.getSize());
 		System.out.println("Size:\t" + size);
 		System.out.println("S1:\t\t" + s1.get().toString());
 		System.out.println("S2:\t\t" + s2.get().toString());
-		System.out
-				.println("---------------------------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------------------");
+		try {
+			System.in.read();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 
 	}
 
