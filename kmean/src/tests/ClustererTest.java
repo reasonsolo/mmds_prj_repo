@@ -52,7 +52,7 @@ public class ClustererTest {
 			writer = new SequenceFile.Writer(fs, conf, path,
 					LongWritable.class, KmeansCluster.class);
 
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 6; i++) {
 				clusters[i] = new KmeansCluster(i);
 				clusters[i].addPoint(vec[i]);
 

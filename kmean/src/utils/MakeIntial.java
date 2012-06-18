@@ -26,14 +26,14 @@ public class MakeIntial {
 	 */
 	public static void main(String[] args) {
 		VectorDoubleWritable vec[] = new VectorDoubleWritable[10];
-		KmeansCluster clusters[] = new KmeansCluster[5];
+		KmeansCluster clusters[] = new KmeansCluster[10];
 		try {
-			String files[] = { "abs.txt", "aerosol.txt", "airplane.txt" };
+			String files[] = { "chess.txt", "door.txt", "fire.txt", "tank.txt",
+					"television.txt", "world map.txt" };
 			int i = 0;
 			for (String file : files) {
 				BufferedReader reader = new BufferedReader(new FileReader(
-						"/home/phoenix/workspace/hadoop/mmds_prj_repo/kmean/dataset/HSV64/"
-								+ file));
+						"/home/phoenix/workspace/temp/" + file));
 				String temp = null;
 				temp = reader.readLine();
 				vec[i++] = new VectorDoubleWritable(new Text(temp));
@@ -50,7 +50,7 @@ public class MakeIntial {
 			writer = new SequenceFile.Writer(fs, conf, path,
 					LongWritable.class, KmeansCluster.class);
 
-			for (i = 0; i < 3; i++) {
+			for (i = 0; i < 6; i++) {
 				clusters[i] = new KmeansCluster(i);
 				clusters[i].addPoint(vec[i]);
 
