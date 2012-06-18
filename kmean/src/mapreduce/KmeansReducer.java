@@ -27,13 +27,13 @@ public class KmeansReducer extends
 		KmeansCluster cluster = clusterMap.get(key.get());
 		System.out.println("Reducer cluster:\t" + cluster.getId());
 		System.out.println("BEFORE REDUCE");
-		for (KmeansCluster kcluster: clusterer.getClusters()) {
+		for (KmeansCluster kcluster : clusterer.getClusters()) {
 			kcluster.logSize();
 		}
 		for (KmeansCluster value : values) {
 			System.out.println("Values:\t" + key + "\t"
 					+ value.getCentroid().get().toString());
-			//cluster.omitCluster(value);
+			cluster.omitCluster(value);
 		}
 		System.out.println("Cluster:\t" + cluster.getCentroid().get());
 
@@ -54,7 +54,7 @@ public class KmeansReducer extends
 				+ context.getCounter(Constants.COUNTER_GROUP,
 						Constants.COUNTER_TOTAL).getValue());
 		System.out.println("AFTER REDUCE");
-		for (KmeansCluster kcluster: clusterer.getClusters()) {
+		for (KmeansCluster kcluster : clusterer.getClusters()) {
 			kcluster.logSize();
 		}
 	}
@@ -88,7 +88,8 @@ public class KmeansReducer extends
 			try {
 				this.clusterer.loadClusters(clusterPath, conf);
 				for (KmeansCluster cluster : this.clusterer.getClusters()) {
-					clusterMap.put(new Long(cluster.getId()), cluster);
+					clusterMap.put(new Long(cluster.getId()),
+							new KmeansCluster(cluster.getId()));
 				}
 			} catch (URISyntaxException e) {
 				e.printStackTrace();

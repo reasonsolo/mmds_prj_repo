@@ -1,7 +1,7 @@
 ./kmean/bin/
 *.class
 *.txt
-./report/tmp/*
-./report/report.synctex.gz
-./report/.fuse_*
-./report/.project
+report/tmp/*
+report/report.synctex.gz
+report/.fuse_*
+report/.project
