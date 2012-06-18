@@ -89,7 +89,7 @@ public class KmeansDriver {
 				iterCounter++;
 			} while ((converge.getValue() < total.getValue()
 					/ totalfile.getValue())
-					|| (iterCounter > maxIteraion));
+					&& (iterCounter < maxIteraion));
 
 			conf.set(Constants.CLUSTER_PATH, args[1] + ".part"
 					+ (iterCounter - 1) + "/part-r-00000");
