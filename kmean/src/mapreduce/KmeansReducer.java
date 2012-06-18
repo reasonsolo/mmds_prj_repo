@@ -27,35 +27,35 @@ public class KmeansReducer extends
 		// KmeansCluster cluster = clusterMap.get(key.get());
 		KmeansCluster cluster = new KmeansCluster((int) key.get());
 		
-		System.out.println("Reducer cluster:\t" + cluster.getId());
-		System.out.println("BEFORE REDUCE");
+		System.err.println("Reducer cluster:\t" + cluster.getId());
+		System.err.println("BEFORE REDUCE");
 		for (KmeansCluster kcluster : clusterer.getClusters()) {
 			kcluster.logSize();
 		}
 		for (KmeansCluster value : values) {
-			System.out.println("Values:\t" + key + "\t"
+			System.err.println("Values:\t" + key + "\t"
 					+ value.getCentroid().get().toString());
 			cluster.omitCluster(value);
 		}
-		System.out.println("Cluster:\t" + cluster.getCentroid().get());
+		System.err.println("Cluster:\t" + cluster.getCentroid().get());
 
 		if (clusterer.isConverged(cluster, threshold))
 			context.getCounter(Constants.COUNTER_GROUP,
 					Constants.COUNTER_CONVERGED).increment(1);
 		try {
-			System.out.println("Context:\t" + key + "\t"
+			System.err.println("Context:\t" + key + "\t"
 					+ cluster.getCentroid());
 			context.write(key, cluster);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Converaged cluster:"
+		System.err.println("Converaged cluster:"
 				+ context.getCounter(Constants.COUNTER_GROUP,
 						Constants.COUNTER_CONVERGED).getValue()
 				+ "\tTotal clusters:"
 				+ context.getCounter(Constants.COUNTER_GROUP,
 						Constants.COUNTER_TOTAL).getValue());
-		System.out.println("AFTER REDUCE");
+		System.err.println("AFTER REDUCE");
 		for (KmeansCluster kcluster : clusterer.getClusters()) {
 			kcluster.logSize();
 		}
@@ -99,7 +99,7 @@ public class KmeansReducer extends
 
 		/*
 		 * for (KmeansCluster clu : clusterer.getClusters()) {
-		 * System.out.println("Cluster " + clu.getId() + "/" +
+		 * System.err.println("Cluster " + clu.getId() + "/" +
 		 * this.clusterer.getClusters().size() + ":\t" + clu.getCentroid()); }
 		 */
 
