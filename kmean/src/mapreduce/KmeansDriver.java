@@ -86,9 +86,13 @@ public class KmeansDriver {
 				totalfile = job.getCounters().getGroup(Constants.COUNTER_GROUP)
 						.findCounter(Constants.COUNTER_FILE);
 				System.out
+						.println("#########################################################");
+				System.out
 						.println("CONVERGED: " + converge.getValue()
 								+ "\tTotal: " + total.getValue()
 								/ totalfile.getValue());
+				System.out
+						.println("#########################################################");
 				iterCounter++;
 			} while ((converge.getValue() < total.getValue()
 					/ totalfile.getValue())
