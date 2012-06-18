@@ -69,6 +69,12 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		while (ite1.hasNext() && ite2.hasNext()) {
 			result.append(ite1.next() + ite2.next());
 		}
+		if (ite1.hasNext())
+			while (ite1.hasNext())
+				result.append(ite1.next());
+		else if (ite2.hasNext())
+			while (ite2.hasNext())
+				result.append(ite2.next());
 		return result;
 	}
 
@@ -79,6 +85,12 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		while (ite1.hasNext() && ite2.hasNext()) {
 			result.append(ite1.next() - ite2.next());
 		}
+		if (ite1.hasNext())
+			while (ite1.hasNext())
+				result.append(ite1.next());
+		else if (ite2.hasNext())
+			while (ite2.hasNext())
+				result.append(-ite2.next());
 		return result;
 	}
 
@@ -89,6 +101,12 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		while (ite1.hasNext() && ite2.hasNext()) {
 			result.append(ite1.next() * ite2.next());
 		}
+		if (ite1.hasNext())
+			while (ite1.hasNext())
+				result.append(0d);
+		else if (ite2.hasNext())
+			while (ite2.hasNext())
+				result.append(0d);
 		return result;
 	}
 
@@ -99,6 +117,12 @@ public class VectorDoubleWritable implements Writable, Cloneable {
 		while (ite1.hasNext() && ite2.hasNext()) {
 			result.append(ite1.next() / ite2.next());
 		}
+		if (ite1.hasNext())
+			while (ite1.hasNext())
+				result.append(0d);
+		else if (ite2.hasNext())
+			while (ite2.hasNext())
+				result.append(0d);
 		return result;
 	}
 
