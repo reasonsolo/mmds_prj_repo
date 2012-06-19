@@ -5,3 +5,4 @@ report/tmp/*
 report/report.synctex.gz
 report/.fuse_*
 report/*.pdf
+report/.project
