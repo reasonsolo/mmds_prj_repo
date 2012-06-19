@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage{url}
-
+\newcommand{\tabcaption}{\def\@captype{table}\caption}
 \title{
 Mining of Massive Dataset\\
 Project 2 Report
@@ -76,35 +76,36 @@ implementation. Note that to find proper initial clusters, which may lead to
 fewer iterations and good result, we also implemented a Canopy clustering
 MapReduce algorithm.
 \subsection{Canopy Clustering}
-Canopy method is a relative easy but efficient clustering method. The basic
-idea of Canopy is to put the similar items into the subset, which are called
-Canopies. Different Canopies can overlap each other, but there is no node,
-which doesn't belongs to any of Canopy. Thus, here we use this method to
-pretreat the dataset before Kmeans method.
+Canopy method is a relative easy but efficient clustering method. The basic 
+idea of Canopy is to put the similar items into the subset, which are called 
+Canopies. Different Canopies can overlap each other, but there is no node, 
+which doesn't belongs to any of Canopy. Thus, here we use this method to 
+pretreat the dataset before Kmeans method. 
 
-The algorithm is built up by the following MapReduce phases,
+The algorithm is built up by the following MapReduce phases.
+\subsubsection{Procedure}
 \begin{enumerate}
-  \item Choose two distance threshold $t1$ and $t2$, where $t1>t1$.	
-  \item Choose a node P from the list, and quickly calculate the distance
-  between node P and Canopy, if this distance is less than t1, put P into this
-  Canopy, if no such kind Canopy exits, take P as a new Canopy.
-  \item if P was near enough to some Canopy, actually it means the distance
-  between P and the Canopy is less than t2, then delete node P from the list.
-  \item repeat 2 and 3 until the list is empty.
+  \item Mapper \\
+      \verb|<LongWritable, Text>|$\rightarrow$ \verb|<1,CanopyCluster>|\\
+      Choose two distance threshold $t1$ and $t2$, where $t1>t2$. For each  
+      node P in the list, calculate the distance between node 
+      P and Canopy, if this distance is less than t1, put P into this 
+      Canopy cluster, if no such kind Canopy cluster exits, take P as a new 
+      Canopy. If P was near enough to some Canopy cluster, which means the 
+      distance   between P and the Canopy is less than t2, delete 
+      node P from the list. 
+  \item Reduce\\
+    \verb|<1,CanopyCluster>|  $\rightarrow$   
+    \verb|<identifier,KmeansCluster>| \\
+     There is only one reducer and the reducer's job is to do another canopy 
+     custering on the output of the mappers described above. That's why the 
+     mappers always assign 1 to the keys of every output pair.
+     For this round of clustering we can use another $t1,t2$ combination, 
+     namely $t3$ and $t4$. 
+     It's handy to use the KmeansCluster as the result format and kmeans 
+     clustering pass could load the result quickly.
 \end{enumerate}
-The parallel strategy described as map-reduce is to produce some Canopy in the
-mapper work and get the final Canopy set in the reducer work. The more details
-are described as follows
 
-\begin{enumerate}
-    \item Mapper: \verb|<LongWritable, Text>|$\rightarrow$
-    \verb|<"centroid",CanopyCluster>|. It reads the input file content as
-    value. The key is a fixed string "centroid", and the value is the center
-    node of the Canopy.
-    \item Combiner: which can be considered as a local reducer.
-    \item Reducer: recalculate the center point of local Canopy and update the
-    information of the global Canopy. Write \verb|<identifier,CanopyCluster>| into context.
-\end{enumerate}
 
 \subsection{k-means Clustering}
 Mahout Project~\cite{apache:mahout} is a data mining framework under Apache™
@@ -121,9 +122,9 @@ The algorithm is built up by the following MapReduce phases,
 \end{enumerate}
 
 The detail of the first phase is described as follows
-\subsubsection{Iterations}
+\subsubsection{Procedure}
 \begin{enumerate}
-  \item Mapper\\\verb|<LongWritable, Text>|$\rightarrow$
+  \item Mapper\\\verb|<LongWritable, KmeansCluster>|$\rightarrow$
   \verb|<LongWritable,KmeansCluster>|. It reads the input file content as value.
   The key is the value offset in the file. Then it convert the value to a
   VectorDoubleWritable, which is used to represent the feature vector. It finds
@@ -135,7 +136,8 @@ The detail of the first phase is described as follows
   assigned to the same cluster) using KmeansCluster.omitCluster(). This function
   reduced the network transmission flow because the actual meaningful
   information need to be communicated between different nodes are only the N,
-  SUM and SUMSQ of clusters, which is described in the lecture slides of BFR algorithm.
+  SUM and SUMSQ of clusters, which is described in the lecture slides of BFR 
+  algorithm. 
   \item Reducer\\\verb|<LongWritable, KmeansCluster>|$\rightarrow$
   \verb|<LongWritable, KmeansCluster>|. It reads the cluster id as key and the
   KmeansCluster as value. It adds the N, SUM and SUMSQ. The result leads to the
@@ -160,12 +162,21 @@ the Text object into a VectorDoubleWritble object that represents a data point.
 For each point we find the nearest cluster and output the cluster id and some
 other useful information for statistic and evaluation as value.
 
+\section{Evaluation}
+To evaluate the results of our experiment, we calculate the precision and 
+recall of the results, then calculate the F value. Better results we get will 
+lead to a better score.
 
-\section{Evaluation}\label{sec:evaluation}
-In our experiment, we calculate the purity to evaluate the results. A higher purity means a more accurate clustering result.
-\subsection{Clsuter Fnformation}
-To run our Hadoop, we established a tiny cluster with 3 computer connected by a
-100Mbps TP-Link router using Ethernet.
+\subsection{Evalutation Dataset}
+Since the whole MS image dataset is too large, we pick a subset of the files 
+but each item contains all features. Here is the file list:\\
+% TODO dataset file list
+
+Also, we use a set of different convergence threshold to evaluate the results
+and the running time.
+\subsection{Cluster Information}
+To run our Hadoop, we established a tiny cluster with 3 computer connected by 
+a 100Mbps TP-Link router using Ethernet.
 \begin{enumerate}
   \item Namenode/DataNode/TaskTracker
   \begin{itemize}
@@ -189,21 +200,30 @@ To run our Hadoop, we established a tiny cluster with 3 computer connected by a
     \item Ubuntu 12.04 LTS x64
   \end{itemize}
 \end{enumerate}
-\subsection{Evaluation Algorithm}
-Because we don't know the map relationship between our clusters and the GrandTruth classes, so we must find a maximum match from the clusters to origin classes, so that we can get a maximum purity.
-The basic idea to find such a maximum match is to find a highest purity of the clusters for each class, and map the cluster to the origin class.
-The detail of the Algorithm is described as follows
-\begin{enumerate}
-  \item For each origin class, find the cluster-ID, which has the maximum purity.  	
-  \item Find the class which has the maximum purity among the maximum purity of different classes. And assign the maximum cluster-ID to this class.
-  \item Set all current purity in this class to zero, and set all the cluster-ID in other classes to zero.
-  \item Repeat 1,2,3 until all classes have an assigned cluster-ID.
-  \item Output the purity for each classes.
-\end{enumerate}
 \subsection{Evaluation Results}
-%to-do
+Results are listed in the table.\ref{tab:evaluation}
+
+\begin{table}[!h]
+    \begin{tabular}{l|lll|ll}
+        \hline 
+        THRESHOLD & PRECISION & RECALL & F & ITERATION & TIME\\
+        \hline
+        % TODO fill the table
+        \hline
+    \end{tabular}
+    \caption{Evaluation Results}
+    \label{tab:evaluation}
+\end{table}
+
+\subsection{Note on the Results}
+% TODO 
+The results of given dataset are really poor, but we guess the dataset can 
+be a problem because the features are actually not relarant to the labels.
+
+We have run some testings on some different datasets whose points can be 
+distinguish clearly. Our program gave almost perfect results.
 
 \bibliographystyle{plain}
-\bibliography{myrefs}
+\bibliography{myrefs.bib}
 
 \end{document}
