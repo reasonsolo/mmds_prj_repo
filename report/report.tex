@@ -4,7 +4,10 @@
 \usepackage{lmodern}
 \usepackage{url}
 
-\title{Mining of Massive Dataset}
+\title{
+Mining of Massive Dataset\\
+Project 2 Report
+}
 \author{Hao Jiteng, Zhou Lizhi, Yang Fangzhou}
 
 \begin{document}
@@ -13,7 +16,7 @@
 %\tableofcontents
 
 \begin{abstract}
-K-means is a simple yet useful clustering algorithm. It's underline natural
+K-means is a simple yet useful clustering algorithm. It's underlying natural
 implies that it could be parallelized or distributized. Some implementation of
 kmeans employs platforms such as Hadoop and CUDA to boost the process of mining
 of massive dataset.
@@ -67,33 +70,30 @@ Canopies. Different Canopies can overlap each other, but there is no node,
 which doesn't belongs to any of Canopy. Thus, here we use this method to 
 pretreat the dataset before Kmeans method. 
 
-The algorithm is built up by the following MapReduce phases,
+The algorithm is built up by the following MapReduce phases.
+\subsubsection{Procedure}
 \begin{enumerate}
-  \item Choose two distance threshold $t1$ and $t2$, where $t1>t2$.	
-  \item Choose a node P from the list, and quickly calculate the distance
-  between node P and Canopy, if this distance is less than t1, put P into this
-  Canopy, if no such kind Canopy exits, take P as a new Canopy.
-  \item if P was near enough to some Canopy, which means the distance
-  between P and the Canopy is less than t2, delete node P from the list.
-  \item repeat 2 and 3 until the list is empty.
+  \item Mapper \\
+      \verb|<LongWritable, Text>|$\rightarrow$ \verb|<1,CanopyCluster>|\\
+      Choose two distance threshold $t1$ and $t2$, where $t1>t2$. For each  
+      node P in the list, calculate the distance between node 
+      P and Canopy, if this distance is less than t1, put P into this 
+      Canopy cluster, if no such kind Canopy cluster exits, take P as a new 
+      Canopy. If P was near enough to some Canopy cluster, which means the 
+      distance   between P and the Canopy is less than t2, delete 
+      node P from the list. 
+  \item Reduce\\
+    \verb|<1,CanopyCluster>|  $\rightarrow$   
+    \verb|<identifier,KmeansCluster>| \\
+     There is only one reducer and the reducer's job is to do another canopy 
+     custering on the output of the mappers described above. That's why the 
+     mappers always assign 1 to the keys of every output pair.
+     For this round of clustering we can use another $t1,t2$ combination, 
+     namely $t3$ and $t4$. 
+     It's handy to use the KmeansCluster as the result format and kmeans 
+     clustering pass could load the result quickly.
 \end{enumerate}
-The parallel strategy described as map-reduce is to produce some Canopy in the
-mapper work and get the final Canopy set in the reducer work. The more details
-are described as follows
 
-\begin{enumerate}
-    \item Mapper: \verb|<LongWritable, Text>|$\rightarrow$
-        \verb|<1,CanopyCluster>|. It reads the input file content as
-        value. The key is a fixed number 1, and the value is the center
-        node of the Canopy.
-    \item Reducer: there is only one canopy reducer in the canopy clustering 
-        procedure and it should gather the output of all the mappers and do 
-        the second round of canopy clustering for the result of mappers (and 
-        it's possible to use a different $t1,t2$ combination).
-        Then the reducer write \verb|<identifier,KmeansCluster>| into context.
-        It's handy to use the KmeansCluster as the result format and kmeans 
-        clustering pass could load the result quickly.
-\end{enumerate}
 
 \subsection{k-means Clustering}
 Mahout Project~\cite{apache:mahout} is a data mining framework under Apache™
@@ -110,7 +110,7 @@ The algorithm is built up by the following MapReduce phases,
 \end{enumerate}
 
 The detail of the first phase is described as follows
-\subsubsection{Iterations}
+\subsubsection{Procedure}
 \begin{enumerate}
   \item Mapper\\\verb|<LongWritable, KmeansCluster>|$\rightarrow$
   \verb|<LongWritable,KmeansCluster>|. It reads the input file content as value.
@@ -143,28 +143,43 @@ point to its nearest cluster. This phase only require mapper to do all the
 works, since this procedure is highly parallelized. Each two point are
 independent of each other.
 
+The mapper takes the following form:\\
+\verb|<LongWritable, Text>|$\rightarrow$\verb|<Text, Text>|\\
+It takes the data offset in file as key and the data as value. First it convert
+the Text object into a VectorDoubleWritble object that represents a data point.
+For each point we find the nearest cluster and output the cluster id and some
+other useful information for statistic and evaluation as value.
+
+
 \section{Evaluation}
-In our experiment, we calculate the purity to evaluate the results. A higher 
-purity means a more accurate clustering result. 
-\subsection{Evaluation Algorithm}
-Because we don't know the map relationship between our clusters and the 
-GrandTruth classes, so we must find a maximum match from the clusters to 
-origin classes, so that we can get a maximum purity. 
-The basic idea to find such a maximum match is to find a highest purity of the 
-clusters for each class, and map the cluster to the origin class. 
-The detail of the Algorithm is described as follows
-\begin{enumerate}
-  \item For each origin class, find the cluster-ID, which has the maximum 
-      purity.  	 
-  \item Find the class which has the maximum purity among the maximum purity 
-      of different classes. And assign the maximum cluster-ID to this class. 
-  \item Set all current purity in this class to zero, and set all the 
-      cluster-ID in other classes to zero. 
-  \item Repeat 1,2,3 until all classes have an assigned cluster-ID.
-  \item Output the purity for each classes.
-\end{enumerate}
+To evaluate the results of our experiment, we calculate the precision and 
+recall of the results, then calculate the F value. Better results we get will 
+lead to a better score.
+
+\subsection{Evalutation Dataset}
+Since the whole MS image dataset is too large, we pick a subset of the files 
+but each item contains all features. Here is the file list:\\
+% TODO dataset file list
+
+Also, we use a set of different convergence threshold to evaluate the results
+and the running time.
 \subsection{Evaluation Results}
-%to-do
+\ref{tab:evaluation}
+\begin{table}
+    \centering
+    \begin{tabular}{l|lll|ll}
+        \hline 
+        THRESHOLD & PRECISION & RECALL & F & ITERATION & TIME\\
+        \hline
+        % TODO fill the table
+        \hline
+    \end{tabular}
+    \caption{Evaluation Results}
+    \label{tab:evaluation}
+\end{table}
+
+\subsection{Note on the Results}
+% TODO
 
 \bibliographystyle{plain}
 \bibliography{myrefs.bib}

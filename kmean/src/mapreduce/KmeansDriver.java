@@ -35,8 +35,11 @@ public class KmeansDriver {
 		Counter converge = null;
 		Counter total = null;
 		Counter totalfile = null;
+		float threshold = 0.00001f;
+		if ((args.length >= 4) && (args[3] != null) && (!args[3].isEmpty()))
+			threshold = Float.parseFloat(args[3]);
 		int maxIteraion = 50;
-		if ((args.length == 3) && (args[2] != null) && (!args[2].isEmpty()))
+		if ((args.length >= 3) && (args[2] != null) && (!args[2].isEmpty()))
 			maxIteraion = Integer.parseInt(args[2]);
 		else
 			maxIteraion = 50;
@@ -44,7 +47,7 @@ public class KmeansDriver {
 		Path in = new Path(args[0]);
 		Path out;
 		int iterCounter = 0;
-		conf.setFloat(Constants.THRESHOLD, 0.00001f);
+		conf.setFloat(Constants.THRESHOLD, threshold);
 		try {
 			do {
 				if (iterCounter == 0)
@@ -56,7 +59,7 @@ public class KmeansDriver {
 
 				Job job = new Job(conf);
 				job.setNumReduceTasks(Constants.REDUCERAMOUNT);
-				job.setJobName("K-means clustering");
+				job.setJobName("K-means clustering iteration " + iterCounter);
 				job.setJarByClass(KmeansDriver.class);
 				job.setMapperClass(KmeansMapper.class);
 				job.setCombinerClass(KmeansCombiner.class);
@@ -119,7 +122,9 @@ public class KmeansDriver {
 			e.printStackTrace();
 		}
 		Date finish = new Date();
-		System.out.println("All clusters converged. k-means finishs.");
+		System.out.println(converge.getValue() + "/" + total.getValue()
+				/ totalfile.getValue()
+				+ " clusters converged. k-means finishs.");
 		System.out.println("It takes " + (finish.getTime() - start.getTime())
 				/ 1000.0 + "s to accomplish clustering.");
 	}

@@ -82,8 +82,8 @@ public class KmeansClusterer {
 	public boolean isConverged(KmeansCluster cluster, double threshold) {
 		KmeansCluster last = clusterMap.get(new Long(cluster.getId()));
 		double dist = dm.distance(cluster.getCentroid(), last.getCentroid());
-		if (Constants.DEBUG)
-			System.out.println("DIST:" + dist);
+		// if (Constants.DEBUG)
+		System.out.println("DIST:" + dist);
 		return dist < threshold;
 	}
 
