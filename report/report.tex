@@ -158,13 +158,31 @@ other useful information for statistic and evaluation as value.
 \section{Evaluation}\label{sec:evaluation}
 In our experiment, we calculate the purity to evaluate the results. A higher purity means a more accurate clustering result.
 \subsection{Clsuter Fnformation}
-To run our Hadoop, we established a tiny cluster with 3 computer.
-\begin{center}
-\begin{tabluar}{|l|c|l|c|l|c|}
-\hline
-\hline
-\end{tabluar}
-\end{center}
+To run our Hadoop, we established a tiny cluster with 3 computer connected by a
+100Mbps TP-Link router using Ethernet.
+\begin{enumerate}
+  \item Namenode
+  \begin{itemize}
+    \item Intel Core 2 Duo P8700 @ 2.53GHz
+    \item 2 Core 2 Threads
+    \item 4G DDR3 1066 RAM
+    \item OpenSUSE 12.1 x64
+  \end{itemize}
+  \item Slave 1
+  \begin{itemize}
+    \item Intel Core 2 Duo T6600 @ 2.2GHz
+    \item 2 Core 2 Threads
+    \item 2G DDR2 800 RAM
+    \item Archlinux i386
+  \end{itemize}
+  \item Slave 2
+  \begin{itemize}
+    \item AMD Processor @ 3.0GHz 
+    \item 6 Core 6 Threads
+    \item 8G DDR3 1066 RAM
+    \item Ubuntu 12.04 LTS x64
+  \end{itemize}
+\end{enumerate}
 \subsection{Evaluation Algorithm}
 Because we don't know the map relationship between our clusters and the GrandTruth classes, so we must find a maximum match from the clusters to origin classes, so that we can get a maximum purity.
 The basic idea to find such a maximum match is to find a highest purity of the clusters for each class, and map the cluster to the origin class.
