@@ -56,6 +56,7 @@ this problem. The detail of our algorithm is documented in the following
 section.
 
 \subsection{Dataset}
+\subsubsection{MSRA image data set}
 The MSRA image data set contains 295 classes of images. Every image class
 has hundreds of images. 7 features are used to describe the images. There are
 files that decribe the relavence between the image and the topic.
@@ -63,6 +64,11 @@ files that decribe the relavence between the image and the topic.
 For our situation, we combine the 7 features into one and regards it as a vector
 with about a thousand dimensions. We did't use the relavence information for
 simplicity. The evaluation results are shown in Section.~\ref{sec:evaluation}
+\subsubsection{A-set dataset}
+The A-set dataset~\cite{dataset:aset} is used to test our algorithms'
+correctness. This dataset is downloaded from the Internet. The visualization of
+this data set shows that the data points are relatively seperated, which is very
+suitable to verify the correctness.
 
 \section{Clustering Algorithm}
 In this section we discuss the k-means clustering algorithm used in our
