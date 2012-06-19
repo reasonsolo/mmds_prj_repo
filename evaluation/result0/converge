@@ -1,0 +1,4 @@
+apple banana blood bus calendar coin console eye face fire gun rock sun television ufo
+CanopyDriver 0.2 0.1 0.2 0.1 /canopy/ /canopyresult2
+KmeansDriver /canopy/ /canopyresult2/part-r-00000 20 0.01
+It takes 599.839s to accomplish clustering. 10/10 converge
