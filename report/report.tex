@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage{url}
-
+\newcommand{\tabcaption}{\def\@captype{table}\caption}
 \title{
 Mining of Massive Dataset\\
 Project 2 Report
@@ -56,7 +56,13 @@ this problem. The detail of our algorithm is documented in the following
 section.
 
 \subsection{Dataset}
-% TODO 
+The MSRA image data set contains 295 classes of images. Every image class
+has hundreds of images. 7 features are used to describe the images. There are
+files that decribe the relavence between the image and the topic.
+
+For our situation, we combine the 7 features into one and regards it as a vector
+with about a thousand dimensions. We did't use the relavence information for
+simplicity. The evaluation results are shown in Section.~\ref{sec:evaluation}
 
 \section{Clustering Algorithm}
 In this section we discuss the k-means clustering algorithm used in our
@@ -150,7 +156,6 @@ the Text object into a VectorDoubleWritble object that represents a data point.
 For each point we find the nearest cluster and output the cluster id and some
 other useful information for statistic and evaluation as value.
 
-
 \section{Evaluation}
 To evaluate the results of our experiment, we calculate the precision and 
 recall of the results, then calculate the F value. Better results we get will 
@@ -163,10 +168,36 @@ but each item contains all features. Here is the file list:\\
 
 Also, we use a set of different convergence threshold to evaluate the results
 and the running time.
+\subsection{Cluster Information}
+To run our Hadoop, we established a tiny cluster with 3 computer connected by 
+a 100Mbps TP-Link router using Ethernet.
+\begin{enumerate}
+  \item Namenode/DataNode/TaskTracker
+  \begin{itemize}
+    \item Intel Core 2 Duo P8700 @ 2.53GHz
+    \item 2 Core 2 Threads
+    \item 4G DDR3 1066 RAM
+    \item OpenSUSE 12.1 x64
+  \end{itemize}
+  \item DataNode/TaskTracker
+  \begin{itemize}
+    \item Intel Core 2 Duo T6600 @ 2.2GHz
+    \item 2 Core 2 Threads
+    \item 2G DDR2 800 RAM
+    \item Archlinux i386
+  \end{itemize}
+  \item DataNode/TaskTracker
+  \begin{itemize}
+    \item AMD Processor @ 3.0GHz 
+    \item 6 Core 6 Threads
+    \item 8G DDR3 1066 RAM
+    \item Ubuntu 12.04 LTS x64
+  \end{itemize}
+\end{enumerate}
 \subsection{Evaluation Results}
-\ref{tab:evaluation}
-\begin{table}
-    \centering
+Results are listed in the table.\ref{tab:evaluation}
+
+\begin{table}[!h]
     \begin{tabular}{l|lll|ll}
         \hline 
         THRESHOLD & PRECISION & RECALL & F & ITERATION & TIME\\
@@ -179,7 +210,12 @@ and the running time.
 \end{table}
 
 \subsection{Note on the Results}
-% TODO
+% TODO 
+The results of given dataset are really poor, but we guess the dataset can 
+be a problem because the features are actually not relarant to the labels.
+
+We have run some testings on some different datasets whose points can be 
+distinguish clearly. Our program gave almost perfect results.
 
 \bibliographystyle{plain}
 \bibliography{myrefs.bib}
