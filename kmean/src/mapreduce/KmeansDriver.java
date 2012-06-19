@@ -122,7 +122,9 @@ public class KmeansDriver {
 			e.printStackTrace();
 		}
 		Date finish = new Date();
-		System.out.println("All clusters converged. k-means finishs.");
+		System.out.println(converge.getValue() + "/" + total.getValue()
+				/ totalfile.getValue()
+				+ " clusters converged. k-means finishs.");
 		System.out.println("It takes " + (finish.getTime() - start.getTime())
 				/ 1000.0 + "s to accomplish clustering.");
 	}

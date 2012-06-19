@@ -4,7 +4,10 @@
 \usepackage{lmodern}
 \usepackage{url}
 
-\title{Mining of Massive Dataset}
+\title{
+Mining of Massive Dataset\\
+Project 2 Report
+}
 \author{Hao Jiteng, Zhou Lizhi, Yang Fangzhou}
 
 \begin{document}
@@ -13,7 +16,7 @@
 %\tableofcontents
 
 \begin{abstract}
-K-means is a simple yet useful clustering algorithm. It's underline natural
+K-means is a simple yet useful clustering algorithm. It's underlying natural
 implies that it could be parallelized or distributized. Some implementation of
 kmeans employs platforms such as Hadoop and CUDA to boost the process of mining
 of massive dataset.
@@ -133,6 +136,14 @@ After the iterations, the clusters are stable. Next we are going to assign every
 point to its nearest cluster. This phase only require mapper to do all the
 works, since this procedure is highly parallelized. Each two point are
 independent of each other.
+
+The mapper takes the following form:\\
+\verb|<LongWritable, Text>|$\rightarrow$\verb|<Text, Text>|\\
+It takes the data offset in file as key and the data as value. First it convert
+the Text object into a VectorDoubleWritble object that represents a data point.
+For each point we find the nearest cluster and output the cluster id and some
+other useful information for statistic and evaluation as value.
+
 
 \section{Evaluation}
 In our experiment, we calculate the purity to evaluate the results. A higher purity means a more accurate clustering result.
