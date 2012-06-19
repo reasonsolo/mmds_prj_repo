@@ -65,7 +65,7 @@ For our situation, we combine the 7 features into one and regards it as a vector
 with about a thousand dimensions. We did't use the relavence information for
 simplicity. The evaluation results are shown in Section.~\ref{sec:evaluation}
 \subsubsection{A-set dataset}
-The A-set dataset~\cite{dataset:aset} is used to test our algorithms'
+The A-set dataset~\cite{dataset:aset} is used to test our algorithm's
 correctness. This dataset is downloaded from the Internet. The visualization of
 this data set shows that the data points are relatively seperated, which is very
 suitable to verify the correctness of our k-means.
@@ -201,6 +201,7 @@ a 100Mbps TP-Link router using Ethernet.
   \end{itemize}
 \end{enumerate}
 \subsection{Evaluation Results}
+\subsubsection{MSRA image dataset}
 Results are listed in the table.\ref{tab:evaluation}
 
 \begin{table}[!h]
@@ -222,6 +223,21 @@ be a problem because the features are actually not relarant to the labels.
 
 We have run some testings on some different datasets whose points can be 
 distinguish clearly. Our program gave almost perfect results.
+
+\subsubsection{A-set result}
+As we can see in the dataset download webpage~\cite{dataset:aset}, our second
+evaluation dataset is quite seperated. It doesn't matter whether using canopy
+clustering, the kmeans clustering converge at once with a totally correct
+clustering result. It proved that our algorithm and MapReduce clusters are
+correct, no matter how bad the result of MSRA image dataset is.
+
+\section{Conclusion}
+We finished this project on a own built tiny cluster infrastructure with our own
+PC and laptops. We implemented a k-means algorihtm using hadoop framework with
+MapReduce. We tested our algorithm on our infrastructure with MSRA image dataset
+and 1024 dimension A-set dataset from~\cite{dataset:aset}. The evaluation result
+shows that our algirhtm converge fast although there are some inaccuraccy when
+using the MSRA data set.
 
 \bibliographystyle{plain}
 \bibliography{myrefs.bib}
