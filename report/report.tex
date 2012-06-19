@@ -2,6 +2,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
+\usepackage{graphicx}
 \usepackage{url}
 \newcommand{\tabcaption}{\def\@captype{table}\caption}
 \title{
@@ -20,9 +21,12 @@ K-means is a simple yet useful clustering algorithm. It's underlying natural
 implies that it could be parallelized or distributized. Some implementation of
 kmeans employs platforms such as Hadoop and CUDA to boost the process of mining
 of massive dataset.
+
 In our project we implement k-means algorithm on Apache Hadoop Project. We ran
 our algorithm on our tiny cluster. Evaluation has been done to measure our
 algorithm.
+
+Our source code and other relative materials could be found in github~\cite{github:source}
 \end{abstract}
 
 \section{Introduction}
@@ -42,7 +46,7 @@ detect and handle failures at the application layer, so delivering a
 highly-available service on top of a cluster of computers, each of which may
 be prone to failures.
 
-We mainly use the Hadoop MapReduce framework rather than HDFS.
+We mainly use the Hadoop MapReduce framework.
 
 \subsection{k-means}
 There are many materials that introduce k-means
@@ -55,21 +59,6 @@ mechanism to deal with the incompatibility of memory. MapReduce is a solution to
 this problem. The detail of our algorithm is documented in the following
 section.
 
-\subsection{Dataset}
-\subsubsection{MSRA image data set}
-The MSRA image data set contains 295 classes of images. Every image class
-has hundreds of images. 7 features are used to describe the images. There are
-files that decribe the relavence between the image and the topic.
-
-For our situation, we combine the 7 features into one and regards it as a vector
-with about a thousand dimensions. We did't use the relavence information for
-simplicity. The evaluation results are shown in Section.~\ref{sec:evaluation}
-\subsubsection{A-set dataset}
-The A-set dataset~\cite{dataset:aset} is used to test our algorithm's
-correctness. This dataset is downloaded from the Internet. The visualization of
-this data set shows that the data points are relatively seperated, which is very
-suitable to verify the correctness of our k-means.
-
 \section{Clustering Algorithm}
 In this section we discuss the k-means clustering algorithm used in our
 implementation. Note that to find proper initial clusters, which may lead to
@@ -80,7 +69,7 @@ Canopy method is a relative easy but efficient clustering method. The basic
 idea of Canopy is to put the similar items into the subset, which are called 
 Canopies. Different Canopies can overlap each other, but there is no node, 
 which doesn't belongs to any of Canopy. Thus, here we use this method to 
-pretreat the dataset before Kmeans method. 
+preprocess the dataset and speed up Kmeans method. 
 
 The algorithm is built up by the following MapReduce phases.
 \subsubsection{Procedure}
@@ -94,7 +83,7 @@ The algorithm is built up by the following MapReduce phases.
       Canopy. If P was near enough to some Canopy cluster, which means the 
       distance   between P and the Canopy is less than t2, delete 
       node P from the list. 
-  \item Reduce\\
+  \item Reducer\\
     \verb|<1,CanopyCluster>|  $\rightarrow$   
     \verb|<identifier,KmeansCluster>| \\
      There is only one reducer and the reducer's job is to do another canopy 
@@ -122,7 +111,7 @@ The algorithm is built up by the following MapReduce phases,
 \end{enumerate}
 
 The detail of the first phase is described as follows
-\subsubsection{Procedure}
+\subsubsection{Iterate clusters}
 \begin{enumerate}
   \item Mapper\\\verb|<LongWritable, KmeansCluster>|$\rightarrow$
   \verb|<LongWritable,KmeansCluster>|. It reads the input file content as value.
@@ -167,32 +156,44 @@ To evaluate the results of our experiment, we calculate the precision and
 recall of the results, then calculate the F value. Better results we get will 
 lead to a better score.
 
-\subsection{Evalutation Dataset}
-Since the whole MS image dataset is too large, we pick a subset of the files 
-but each item contains all features. Here is the file list:\\
-% TODO dataset file list
+\subsection{Dataset}
+\subsubsection{MSRA image data set}
+The MSRA image data set contains 295 classes of images. Every image class
+has hundreds of images. 7 features are used to describe the images. There are
+files that decribe the relavence between the image and the topic.
+
+For our situation, we combine the 7 features into one and regards it as a vector
+with about a thousand dimensions. We did't use the relavence information for
+simplicity. The evaluation results are shown in Section.~\ref{sec:evaluation}
+
+To deal with the incapability of small memory and slow speed compare to the
+dataset, we just pick a subset of the dataset. However, these files contain all
+features The files we picked are listed below,\\
+\textsf{apple banana blood bus calendar coin console eye face fire gun rock sun
+television ufo}
 
 Also, we use a set of different convergence threshold to evaluate the results
 and the running time.
+
 \subsection{Cluster Information}
 To run our Hadoop, we established a tiny cluster with 3 computer connected by 
 a 100Mbps TP-Link router using Ethernet.
 \begin{enumerate}
-  \item Namenode/DataNode/TaskTracker
+  \item Namenode/DataNode/JobTracker
   \begin{itemize}
     \item Intel Core 2 Duo P8700 @ 2.53GHz
     \item 2 Core 2 Threads
     \item 4G DDR3 1066 RAM
     \item OpenSUSE 12.1 x64
   \end{itemize}
-  \item DataNode/TaskTracker
+  \item DataNode
   \begin{itemize}
     \item Intel Core 2 Duo T6600 @ 2.2GHz
     \item 2 Core 2 Threads
     \item 2G DDR2 800 RAM
     \item Archlinux i386
   \end{itemize}
-  \item DataNode/TaskTracker
+  \item DataNode
   \begin{itemize}
     \item AMD Processor @ 3.0GHz 
     \item 6 Core 6 Threads
@@ -207,27 +208,42 @@ Results are listed in the table.\ref{tab:evaluation}
 \begin{table}[!h]
     \begin{tabular}{l|lll|ll}
         \hline 
-        THRESHOLD & PRECISION & RECALL & F & ITERATION & TIME\\
+        THRESHOLD & PRECISION & RECALL & F & ITERATION & TIME(s)\\
         \hline
-        % TODO fill the table
+        0.01 & 0.08366 & 0.27716 & 0.12853 & 11 & 599.839\\
+        0.001 & 0.08335 & 0.26792 & 0.12715 & 20 &  1028.0 \\
+        0.0001 & 0.08333 & 0.26202 &  0.12644 & 33 & 1670.715\\
+        0.00001 & 0.08334 & 0.26187 &  0.12644 & 38 & 1905.114\\
+        0.000001 & 0.08334 & 0.26187 &  0.12644 & 41 & 1960.52\\
         \hline
     \end{tabular}
     \caption{Evaluation Results}
     \label{tab:evaluation}
 \end{table}
 
+\begin{figure}[!h]
+    \includegraphics{plot.eps}
+    \caption{Evaluation Results}
+    \label{fig:evaluation}
+\end{figure}
+
 \subsection{Note on the Results}
-% TODO 
 The results of given dataset are really poor, but we guess the dataset can 
 be a problem because the features are actually not relarant to the labels.
 
 We have run some testings on some different datasets whose points can be 
 distinguish clearly. Our program gave almost perfect results.
 
+\subsubsection{A-set dataset}
+The A-set dataset~\cite{dataset:aset} is used to test our algorithm's
+correctness. This dataset is downloaded from the Internet. The visualization of
+this data set shows that the data points are relatively seperated, which is very
+suitable to verify the correctness of our k-means.
+
 \subsubsection{A-set result}
 As we can see in the dataset download webpage~\cite{dataset:aset}, our second
 evaluation dataset is quite seperated. It doesn't matter whether using canopy
-clustering, the kmeans clustering converge at once with a totally correct
+clustering. The kmeans clustering converge at once with a totally correct
 clustering result. It proved that our algorithm and MapReduce clusters are
 correct, no matter how bad the result of MSRA image dataset is.
 
@@ -236,8 +252,8 @@ We finished this project on a own built tiny cluster infrastructure with our own
 PC and laptops. We implemented a k-means algorihtm using hadoop framework with
 MapReduce. We tested our algorithm on our infrastructure with MSRA image dataset
 and 1024 dimension A-set dataset from~\cite{dataset:aset}. The evaluation result
-shows that our algirhtm converge fast although there are some inaccuraccy when
-using the MSRA data set.
+shows that our algirthm is correct and converges fast although there are some
+inaccuraccies when using the MSRA data set.
 
 \bibliographystyle{plain}
 \bibliography{myrefs.bib}
