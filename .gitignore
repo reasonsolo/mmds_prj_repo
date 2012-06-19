@@ -4,4 +4,4 @@
 report/tmp/*
 report/report.synctex.gz
 report/.fuse_*
-report/.project
+report/*.pdf

@@ -56,7 +56,13 @@ this problem. The detail of our algorithm is documented in the following
 section.
 
 \subsection{Dataset}
-% TODO 
+The MSRA image data set contains 295 classes of images. Every image class
+has hundreds of images. 7 features are used to describe the images. There are
+files that decribe the relavence between the image and the topic.
+
+For our situation, we combine the 7 features into one and regards it as a vector
+with about a thousand dimensions. We did't use the relavence information for
+simplicity. The evaluation results are shown in Section.~\ref{sec:evaluation}
 
 \section{Clustering Algorithm}
 In this section we discuss the k-means clustering algorithm used in our
@@ -64,7 +70,11 @@ implementation. Note that to find proper initial clusters, which may lead to
 fewer iterations and good result, we also implemented a Canopy clustering
 MapReduce algorithm.
 \subsection{Canopy Clustering}
-Canopy method is a relative easy but efficient clustering method. The basic idea of Canopy is to put the similar items into the subset, which are called Canopies. Different Canopies can overlap each other, but there is no node, which doesn't belongs to any of Canopy. Thus, here we use this method to pretreat the dataset before Kmeans method.
+Canopy method is a relative easy but efficient clustering method. The basic
+idea of Canopy is to put the similar items into the subset, which are called
+Canopies. Different Canopies can overlap each other, but there is no node,
+which doesn't belongs to any of Canopy. Thus, here we use this method to
+pretreat the dataset before Kmeans method.
 
 The algorithm is built up by the following MapReduce phases,
 \begin{enumerate}
@@ -145,8 +155,16 @@ For each point we find the nearest cluster and output the cluster id and some
 other useful information for statistic and evaluation as value.
 
 
-\section{Evaluation}
+\section{Evaluation}\label{sec:evaluation}
 In our experiment, we calculate the purity to evaluate the results. A higher purity means a more accurate clustering result.
+\subsection{Clsuter Fnformation}
+To run our Hadoop, we established a tiny cluster with 3 computer.
+\begin{center}
+\begin{tabluar}{|l|c|l|c|l|c|}
+\hline
+\hline
+\end{tabluar}
+\end{center}
 \subsection{Evaluation Algorithm}
 Because we don't know the map relationship between our clusters and the GrandTruth classes, so we must find a maximum match from the clusters to origin classes, so that we can get a maximum purity.
 The basic idea to find such a maximum match is to find a highest purity of the clusters for each class, and map the cluster to the origin class.
